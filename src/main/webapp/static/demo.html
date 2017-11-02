@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Language" content="utf-8" />
+    <meta name="Robots" content="all" />
+    <meta name="Author" content="KudyChen" />
+    <meta name="Copyright" content="KudyStudio.Com" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>JBox Demo</title>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+    
+    <script type="text/javascript">
+     var json =  {
+		    	  "id":"1",
+		    	  "name":"一级",
+		    	  "children":[
+		    	     {
+		    	        "id":"2",
+		    	        "name":"二级-1",
+		    	       "children":[]
+		    	     },
+		    	     {
+		    	        "id":"3",
+		    	        "name":"二级-2",
+		    	        "children":[
+		    	             {
+		    	                "id":"4",
+		    	                "name":"三级-1",
+		    	                "children":[]
+		    	             },
+		    	             {
+		    	                "id":"5",
+		    	                "name":"三级-2",
+		    	                "children":[]
+		    	             }
+		    	         ]
+		    	     }
+		    	  ]
+		    	}
+    	 
+	 var idArray = []; 
+     
+     function getId(obj) {
+    	 idArray.push(obj.id);
+    	 $.each(obj.children,function(index,obj) {
+    		 getId(obj);
+    	 });
+     }
+     
+     getId(json);
+     console.log(idArray);
+     
+     </script>
+</head>
+<body></body>
+</html>

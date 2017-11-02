@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.SupplierDao">
+    
+	<sql id="supplierColumns">
+		a.id AS "id",
+		a.supplier_code AS "supplierCode",
+		a.supplier_name AS "supplierName",
+		a.duty_paragraph AS "dutyParagraph",
+		a.bank AS "bank",
+		a.bank_account AS "bankAccount",
+		a.tel AS "tel",
+		a.address AS "address",
+		a.type AS "type",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="supplierJoins">
+	</sql>
+    
+	<select id="get" resultType="Supplier">
+		SELECT 
+			<include refid="supplierColumns"/>
+		FROM ts_supplier a
+		<include refid="supplierJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Supplier">
+		SELECT 
+			<include refid="supplierColumns"/>
+		FROM ts_supplier a
+		<include refid="supplierJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="supplierCode != null and supplierCode != ''">
+				AND a.supplier_code = #{supplierCode}
+			</if>
+			<if test="supplierName != null and supplierName != ''">
+				AND a.supplier_name = #{supplierName}
+			</if>
+			<if test="typeString != null and typeString != ''">
+				AND a.type = #{typeString}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Supplier">
+		SELECT 
+			<include refid="supplierColumns"/>
+		FROM ts_supplier a
+		<include refid="supplierJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ts_supplier(
+			id,
+			supplier_code,
+			supplier_name,
+			duty_paragraph,
+			bank,
+			bank_account,
+			tel,
+			address,
+			type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{supplierCode},
+			#{supplierName},
+			#{dutyParagraph},
+			#{bank},
+			#{bankAccount},
+			#{tel},
+			#{address},
+			#{type},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ts_supplier SET 	
+			supplier_code = #{supplierCode},
+			supplier_name = #{supplierName},
+			duty_paragraph = #{dutyParagraph},
+			bank = #{bank},
+			bank_account = #{bankAccount},
+			tel = #{tel},
+			address = #{address},
+			type = #{type},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ts_supplier SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

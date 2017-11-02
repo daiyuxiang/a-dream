@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.InventoryDao">
+    
+	<sql id="inventoryColumns">
+		a.id AS "id",
+		a.inventory_no AS "inventoryNo",
+		a.supplier_id AS "supplierId",
+		a.inventory_date AS "inventoryDate",
+		a.order_no AS "orderNo",
+		a.other_order_no AS "otherOrderNo",
+		a.total_price AS "totalPrice",
+		a.invoice AS "invoice",
+		a.open_date AS "openDate",
+		a.arrival_date AS "arrivalDate",
+		a.type AS "type",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="inventoryJoins">
+	</sql>
+    
+	<select id="get" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM ts_inventory a
+		<include refid="inventoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM ts_inventory a
+		<include refid="inventoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="inventoryNo != null and inventoryNo != ''">
+				AND a.inventory_no = #{inventoryNo}
+			</if>
+			<if test="supplierId != null and supplierId != ''">
+				AND a.supplier_id = #{supplierId}
+			</if>
+			<if test="inventoryDate != null and inventoryDate != ''">
+				AND a.inventory_date = #{inventoryDate}
+			</if>
+			<if test="totalPrice != null and totalPrice != ''">
+				AND a.total_price = #{totalPrice}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM ts_inventory a
+		<include refid="inventoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ts_inventory(
+			id,
+			inventory_no,
+			supplier_id,
+			inventory_date,
+			order_no,
+			other_order_no,
+			total_price,
+			invoice,
+			open_date,
+			arrival_date,
+			type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{inventoryNo},
+			#{supplierId},
+			#{inventoryDate},
+			#{orderNo},
+			#{otherOrderNo},
+			#{totalPrice},
+			#{invoice},
+			#{openDate},
+			#{arrivalDate},
+			#{type},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ts_inventory SET 	
+			inventory_no = #{inventoryNo},
+			supplier_id = #{supplierId},
+			inventory_date = #{inventoryDate},
+			order_no = #{orderNo},
+			other_order_no = #{otherOrderNo},
+			total_price = #{totalPrice},
+			invoice = #{invoice},
+			open_date = #{openDate},
+			arrival_date = #{arrivalDate},
+			type = #{type},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ts_inventory SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
