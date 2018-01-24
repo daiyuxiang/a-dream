@@ -40,7 +40,7 @@
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 				　--　
 				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:163px;"
-					value="<fmt:formatDate value="${shop.inventoryDateEnd}" pattern="yyyy-MM-dd"/>"
+					value="<fmt:formatDate value="${inventory.inventoryDateEnd}" pattern="yyyy-MM-dd"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			</li>
 			<li><label>总价：</label>
@@ -56,6 +56,7 @@
 			<tr>
 				<th>入库单</th>
 				<th>入库日期</th>
+				<th>供应商</th>
 				<th>总价</th>
 				<th>操作</th>
 			</tr>
@@ -68,6 +69,9 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${inventory.inventoryDate}" pattern="yyyy-MM-dd"/>
+				</td>
+				<td>
+					${inventory.supplierName}
 				</td>
 				<td>
 					${inventory.totalPrice}

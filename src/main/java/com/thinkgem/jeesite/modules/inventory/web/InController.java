@@ -25,9 +25,11 @@ import com.thinkgem.jeesite.modules.inventory.entity.Supplier;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * 入库Controller
+ * 
  * @author daiyuxiang
  */
 @Controller
@@ -39,39 +41,44 @@ public class InController extends BaseController {
 	@Autowired
 	private SupplierService supplierService;
 
-	
 	@ModelAttribute
-	public Inventory get(@RequestParam(required=false) String id) {
+	public Inventory get(@RequestParam(required = false) String id) {
 		Inventory entity = null;
-		if (StringUtils.isNotBlank(id)){
+		if (StringUtils.isNotBlank(id)) {
 			entity = inventoryService.get(id);
 		}
-		if (entity == null){
+		if (entity == null) {
 			entity = new Inventory();
+			entity.setType(InventoryEnum.Inventory_TYPE_1.getValue());
+			if (!"1".equals(UserUtils.getUser().getUserType())) {
+				entity.setCompanyId(UserUtils.getUser().getCompany().getId());
+			}
 		}
 		return entity;
 	}
-	
-	@RequestMapping(value = {"list", ""})
+
+	@RequestMapping(value = { "list", "" })
 	public String list(Inventory inventory, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<Inventory> page = inventoryService.findPage(new Page<Inventory>(request, response), inventory); 
-		
+		Page<Inventory> page = inventoryService.findPage(new Page<Inventory>(request, response), inventory);
+
 		Supplier supplierParam = new Supplier();
-		supplierParam.setTypeString(InventoryEnum.SUPPLIER_TYPE_1.getValue());		
-		List<Supplier> supplierList  = supplierService.findList(supplierParam);
-		
+		supplierParam.setTypeArray(
+				new String[] { InventoryEnum.SUPPLIER_TYPE_1.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
+		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
+
 		model.addAttribute("page", page);
 		model.addAttribute("supplierList", supplierList);
-		
+
 		return "modules/inventory/inList";
 	}
 
 	@RequestMapping(value = "form")
 	public String form(Inventory inventory, Model model) {
 		Supplier supplierParam = new Supplier();
-		supplierParam.setTypeString(InventoryEnum.SUPPLIER_TYPE_1.getValue());		
-		List<Supplier> supplierList  = supplierService.findList(supplierParam);
-		
+		supplierParam.setTypeArray(
+				new String[] { InventoryEnum.SUPPLIER_TYPE_1.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
+		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
+
 		model.addAttribute("inventory", inventory);
 		model.addAttribute("supplierList", supplierList);
 
@@ -80,21 +87,19 @@ public class InController extends BaseController {
 
 	@RequestMapping(value = "save")
 	public String save(Inventory inventory, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, inventory)){
+		if (!beanValidator(model, inventory)) {
 			return form(inventory, model);
 		}
 		inventoryService.save(inventory);
 		addMessage(redirectAttributes, "保存入库单成功");
-		return "redirect:"+Global.getAdminPath()+"/inventory/in/?repage";
+		return "redirect:" + Global.getAdminPath() + "/inventory/in/?repage";
 	}
-	
+
 	@RequestMapping(value = "delete")
 	public String delete(Inventory inventory, RedirectAttributes redirectAttributes) {
 		inventoryService.delete(inventory);
 		addMessage(redirectAttributes, "删除入库单成功");
-		return "redirect:"+Global.getAdminPath()+"/inventory/in/?repage";
+		return "redirect:" + Global.getAdminPath() + "/inventory/in/?repage";
 	}
-	
-	
 
 }

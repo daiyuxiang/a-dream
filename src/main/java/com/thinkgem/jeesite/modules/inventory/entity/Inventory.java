@@ -3,43 +3,48 @@
  */
 package com.thinkgem.jeesite.modules.inventory.entity;
 
-import org.hibernate.validator.constraints.Length;
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
  * 出入库Entity
+ * 
  * @author daiyuxiang
  * @version 2017-08-23
  */
 public class Inventory extends DataEntity<Inventory> {
-	
+
 	private static final long serialVersionUID = 1L;
-	private String inventoryNo;		// 单号
-	private String supplierId;		// 供应商ID
-	private Date inventoryDate;		// 单号时间
-	private String orderNo;		// 订单号
-	private String otherOrderNo;		// 对方订单号
-	private String totalPrice;		// 总价
-	private String invoice;		// 发票
-	private Date openDate;		// 开票日期
-	private Date arrivalDate;		// 到票时间
-	private String type;		// 类型：1入库 2出库
-	
+	private String inventoryNo; // 单号
+	private String supplierId; // 供应商ID
+	private Date inventoryDate; // 单号时间
+	private String orderNo; // 订单号
+	private String otherOrderNo; // 对方订单号
+	private String totalPrice; // 总价
+	private String invoice; // 发票
+	private Date openDate; // 开票日期
+	private Date arrivalDate; // 到票时间
+	private String type; // 类型：1入库 2出库
+	private String companyId; //公司ID
+
 	private Date inventoryDateBegin;
 	private Date inventoryDateEnd;
-	
+
+	private String supplierName; // 供应商名称
+
 	public Inventory() {
 		super();
 	}
 
-	public Inventory(String id){
+	public Inventory(String id) {
 		super(id);
 	}
 
-	@Length(min=0, max=100, message="单号长度必须介于 0 和 100 之间")
+	@Length(min = 0, max = 100, message = "单号长度必须介于 0 和 100 之间")
 	public String getInventoryNo() {
 		return inventoryNo;
 	}
@@ -47,8 +52,8 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setInventoryNo(String inventoryNo) {
 		this.inventoryNo = inventoryNo;
 	}
-	
-	@Length(min=0, max=64, message="供应商ID长度必须介于 0 和 64 之间")
+
+	@Length(min = 0, max = 64, message = "供应商ID长度必须介于 0 和 64 之间")
 	public String getSupplierId() {
 		return supplierId;
 	}
@@ -56,7 +61,7 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setSupplierId(String supplierId) {
 		this.supplierId = supplierId;
 	}
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getInventoryDate() {
 		return inventoryDate;
@@ -65,8 +70,8 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setInventoryDate(Date inventoryDate) {
 		this.inventoryDate = inventoryDate;
 	}
-	
-	@Length(min=0, max=100, message="订单号长度必须介于 0 和 100 之间")
+
+	@Length(min = 0, max = 100, message = "订单号长度必须介于 0 和 100 之间")
 	public String getOrderNo() {
 		return orderNo;
 	}
@@ -74,8 +79,8 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
-	
-	@Length(min=0, max=100, message="对方订单号长度必须介于 0 和 100 之间")
+
+	@Length(min = 0, max = 100, message = "对方订单号长度必须介于 0 和 100 之间")
 	public String getOtherOrderNo() {
 		return otherOrderNo;
 	}
@@ -83,7 +88,7 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setOtherOrderNo(String otherOrderNo) {
 		this.otherOrderNo = otherOrderNo;
 	}
-	
+
 	public String getTotalPrice() {
 		return totalPrice;
 	}
@@ -91,8 +96,8 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setTotalPrice(String totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	
-	@Length(min=0, max=2, message="发票长度必须介于 0 和 2 之间")
+
+	@Length(min = 0, max = 2, message = "发票长度必须介于 0 和 2 之间")
 	public String getInvoice() {
 		return invoice;
 	}
@@ -100,7 +105,7 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setInvoice(String invoice) {
 		this.invoice = invoice;
 	}
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getOpenDate() {
 		return openDate;
@@ -109,7 +114,7 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setOpenDate(Date openDate) {
 		this.openDate = openDate;
 	}
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getArrivalDate() {
 		return arrivalDate;
@@ -118,8 +123,8 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setArrivalDate(Date arrivalDate) {
 		this.arrivalDate = arrivalDate;
 	}
-	
-	@Length(min=0, max=2, message="类型：1入库 2出库长度必须介于 0 和 2 之间")
+
+	@Length(min = 0, max = 2, message = "类型：1入库 2出库长度必须介于 0 和 2 之间")
 	public String getType() {
 		return type;
 	}
@@ -143,6 +148,22 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setInventoryDateEnd(Date inventoryDateEnd) {
 		this.inventoryDateEnd = inventoryDateEnd;
 	}
-	
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
 	
 }

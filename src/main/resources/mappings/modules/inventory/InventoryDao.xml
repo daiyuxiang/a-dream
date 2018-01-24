@@ -14,15 +14,18 @@
 		a.open_date AS "openDate",
 		a.arrival_date AS "arrivalDate",
 		a.type AS "type",
+		a.company_id AS "companyId",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		s.supplier_name AS "supplierName"
 	</sql>
 	
 	<sql id="inventoryJoins">
+		LEFT JOIN ts_supplier s ON a.supplier_id = s.id
 	</sql>
     
 	<select id="get" resultType="Inventory">
@@ -40,6 +43,9 @@
 		<include refid="inventoryJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="companyId != null and companyId != ''">
+				AND a.company_id = #{companyId}
+			</if>
 			<if test="inventoryNo != null and inventoryNo != ''">
 				AND a.inventory_no = #{inventoryNo}
 			</if>
@@ -51,6 +57,15 @@
 			</if>
 			<if test="totalPrice != null and totalPrice != ''">
 				AND a.total_price = #{totalPrice}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="inventoryDateBegin != null and inventoryDateBegin != ''">
+				<![CDATA[ AND DATE_FORMAT(a.inventory_date,'%Y-%m-%d') >= DATE_FORMAT(#{inventoryDateBegin},'%Y-%m-%d') ]]>   				  
+			</if>
+			<if test="inventoryDateEnd != null and inventoryDateEnd != ''">
+				<![CDATA[ AND DATE_FORMAT(a.inventory_date,'%Y-%m-%d') <= DATE_FORMAT(#{inventoryDateEnd},'%Y-%m-%d') ]]>   				  			
 			</if>
 		</where>
 		<choose>
@@ -94,6 +109,7 @@
 			open_date,
 			arrival_date,
 			type,
+			company_id,
 			create_by,
 			create_date,
 			update_by,
@@ -112,6 +128,7 @@
 			#{openDate},
 			#{arrivalDate},
 			#{type},
+			#{companyId},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -133,6 +150,7 @@
 			open_date = #{openDate},
 			arrival_date = #{arrivalDate},
 			type = #{type},
+			company_id = #{companyId},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}

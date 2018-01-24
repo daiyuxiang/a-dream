@@ -1,8 +1,9 @@
 package com.thinkgem.jeesite.modules.inventory.utils;
 
 public enum InventoryEnum {
-	SUPPLIER_TYPE_1("1", "success"),
-	SUPPLIER_TYPE_2("2","success");
+
+	Inventory_TYPE_1("1", "入库"), Inventory_TYPE_2("2", "出库"),
+	SUPPLIER_TYPE_1("1", "供应商"), SUPPLIER_TYPE_2("2", "客户"), SUPPLIER_TYPE_3("3", "供应商+客户");
 	private String value;
 	private String label;
 

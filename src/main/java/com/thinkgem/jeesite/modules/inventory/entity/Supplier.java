@@ -27,6 +27,8 @@ public class Supplier extends DataEntity<Supplier> {
 	private String type; // 类型 1供应商 2客户
 
 	private String typeString; // 类型查询条件
+	
+	private String[] typeArray; // 类型查询条件集合
 
 	public Supplier() {
 		super();
@@ -118,4 +120,13 @@ public class Supplier extends DataEntity<Supplier> {
 		this.typeString = typeString;
 	}
 
+	public String[] getTypeArray() {
+		return typeArray;
+	}
+
+	public void setTypeArray(String[] typeArray) {
+		this.typeArray = typeArray;
+	}
+
+	
 }

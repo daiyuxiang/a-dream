@@ -90,7 +90,6 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="inventory" action="${ctx}/inventory/in/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<form:hidden path="type" value="1"/>
 		<sys:message content="${message}"/>
 		<fieldset>
 			<table class="table-form">
@@ -138,7 +137,7 @@
 		<div class="pagination" id="dataGridPage"></div>	
 		
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="button" value="保 存" onclick="save()"/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

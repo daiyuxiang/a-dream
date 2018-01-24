@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.SupplierDao">
+    
+	<sql id="min-supplierColumns">
+		a.id AS "id",
+		a.supplier_code AS "supplierCode",
+		a.supplier_name AS "supplierName"
+	</sql>
+	
+	<select id="findMinList" resultType="Supplier">
+		SELECT 
+			<include refid="min-supplierColumns"/>
+		FROM ts_supplier a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="supplierCode != null and supplierCode != ''">
+				AND a.supplier_code = #{supplierCode}
+			</if>
+			<if test="supplierName != null and supplierName != ''">
+				AND a.supplier_name = #{supplierName}
+			</if>
+			<if test="typeArray != null">
+				AND a.type in
+				<foreach item="item" index="index" collection="typeArray" open="(" separator="," close=")">  
+				     #{item}  
+				</foreach>  
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+</mapper>
