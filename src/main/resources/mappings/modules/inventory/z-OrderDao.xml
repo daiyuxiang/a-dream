@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.OrderDao">
+
+	<sql id="remind-orderColumns">
+		a.order_no AS "orderNo"
+	</sql>
+
+	<select id="queryRemindList" resultType="Order">
+		SELECT
+		<include refid="remind-orderColumns" />
+		FROM ts_order a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.order_status = #{DEL_FLAG_NORMAL}
+			<![CDATA[ AND DATE_FORMAT(a.reminder_date,'%Y-%m-%d') <= DATE_FORMAT(NOW(),'%Y-%m-%d') ]]>   				  			
+		</where>
+	</select>
+
+
+
+</mapper>

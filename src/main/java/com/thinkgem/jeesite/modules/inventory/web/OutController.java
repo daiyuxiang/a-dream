@@ -49,7 +49,7 @@ public class OutController extends BaseController {
 		}
 		if (entity == null) {
 			entity = new Inventory();
-			entity.setType(InventoryEnum.Inventory_TYPE_2.getValue());
+			entity.setType(InventoryEnum.INVENTORY_TYPE_2.getValue());
 			if (!"1".equals(UserUtils.getUser().getUserType())) {
 				entity.setCompanyId(UserUtils.getUser().getCompany().getId());
 			}

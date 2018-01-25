@@ -1,13 +1,12 @@
 package com.thinkgem.jeesite.modules.inventory.utils;
 
-public enum InventoryEnum {
+public enum OrderEnum {
 
-	INVENTORY_TYPE_1("1", "入库"), INVENTORY_TYPE_2("2", "出库"),
-	SUPPLIER_TYPE_1("1", "供应商"), SUPPLIER_TYPE_2("2", "客户"), SUPPLIER_TYPE_3("3", "供应商+客户");
+	ORDER_STATUS_0("0", "未处理"), ORDER_STATUS_1("1", "处理完成");
 	private String value;
 	private String label;
 
-	InventoryEnum(String value, String label) {
+	OrderEnum(String value, String label) {
 		this.value = value;
 		this.label = label;
 	}

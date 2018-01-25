@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.OrderDao">
+    
+	<sql id="orderColumns">
+		a.id AS "id",
+		a.order_no AS "orderNo",
+		a.good_name AS "goodName",
+		a.good_brand AS "goodBrand",
+		a.supplier_id AS "supplierId",
+		a.arrival_date AS "arrivalDate",
+		a.shipping_type AS "shippingType",
+		a.num AS "num",
+		a.price AS "price",
+		a.customer_id AS "customerId",
+		a.product_date AS "productDate",
+		a.order_status AS "orderStatus",
+		a.reminder_date AS "reminderDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.brand_name AS "goodBrandName",
+		s1.supplier_name AS "supplierName",
+		s2.supplier_name AS "customerName"
+	</sql>
+	
+	<sql id="orderJoins">
+		LEFT JOIN  ts_brand b ON b.id = a.good_brand
+		LEFT JOIN  ts_supplier s1 ON s1.id = a.supplier_id
+		LEFT JOIN  ts_supplier s2 ON s2.id = a.customer_id
+	</sql>
+    
+	<select id="get" resultType="Order">
+		SELECT 
+			<include refid="orderColumns"/>
+		FROM ts_order a
+		<include refid="orderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Order">
+		SELECT 
+			<include refid="orderColumns"/>
+		FROM ts_order a
+		<include refid="orderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="goodName != null and goodName != ''">
+				AND a.good_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodName},'%')</if>
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no LIKE 
+					<if test="dbName == 'oracle'">'%'||#{orderNo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{orderNo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{orderNo},'%')</if>
+			</if>
+			<if test="customerId != null and customerId != ''">
+				AND a.customer_id = #{customerId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Order">
+		SELECT 
+			<include refid="orderColumns"/>
+		FROM ts_order a
+		<include refid="orderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ts_order(
+			id,
+			order_no,
+			good_name,
+			good_brand,
+			supplier_id,
+			arrival_date,
+			shipping_type,
+			num,
+			price,
+			customer_id,
+			product_date,
+			order_status,
+			reminder_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{orderNo},
+			#{goodName},
+			#{goodBrand},
+			#{supplierId},
+			#{arrivalDate},
+			#{shippingType},
+			#{num},
+			#{price},
+			#{customerId},
+			#{productDate},
+			#{orderStatus},
+			#{reminderDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ts_order SET 	
+			order_no = #{orderNo},
+			good_name = #{goodName},
+			good_brand = #{goodBrand},
+			supplier_id = #{supplierId},
+			arrival_date = #{arrivalDate},
+			shipping_type = #{shippingType},
+			num = #{num},
+			price = #{price},
+			customer_id = #{customerId},
+			product_date = #{productDate},
+			order_status = #{orderStatus},
+			reminder_date = #{reminderDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ts_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
