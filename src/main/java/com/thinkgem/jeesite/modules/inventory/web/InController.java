@@ -78,7 +78,7 @@ public class InController extends BaseController {
 		supplierParam.setTypeArray(
 				new String[] { InventoryEnum.SUPPLIER_TYPE_1.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
 		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
-
+		
 		model.addAttribute("inventory", inventory);
 		model.addAttribute("supplierList", supplierList);
 
@@ -92,7 +92,7 @@ public class InController extends BaseController {
 		}
 		inventoryService.save(inventory);
 		addMessage(redirectAttributes, "保存入库单成功");
-		return "redirect:" + Global.getAdminPath() + "/inventory/in/?repage";
+		return "redirect:" + Global.getAdminPath() + "/inventory/in/form?id="+inventory.getId();
 	}
 
 	@RequestMapping(value = "delete")

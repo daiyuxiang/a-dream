@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.GoodDao">
+
+	<sql id="goodColumns">
+		a.id AS "inventoryId",
+		b.id AS "inventoryItemId",
+		a.inventory_no AS "inventoryNo",
+		a.supplier_id AS "supplierId",
+		a.inventory_date AS "inventoryDate",
+		a.order_no AS "orderNo",
+		a.other_order_no AS "otherOrderNo",
+		a.invoice AS "invoice",
+		a.open_date AS "openDate",
+		a.arrival_date AS "arrivalDate",
+		a.type AS "type",
+		a.company_id AS "companyId",		
+		b.goods_name AS "goodsName",
+		b.goods_area AS "goodsArea",
+		b.factory_no AS "factoryNo",
+		b.goods_size AS "goodsSize",
+		b.goods_weight AS "goodsWeight",
+		b.num AS "num",
+		b.price AS "price",
+		b.direction AS "direction",
+		b.location AS "location",
+		b.goods_type AS "goodsType",
+		s.supplier_name AS "supplierName"
+	</sql>
+
+
+	<select id="findList" resultType="Good">
+		SELECT
+		<include refid="goodColumns" />
+		FROM ts_inventory a,
+		     ts_inventory_item b,
+		     ts_supplier s
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND b.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.id = 	b.inventory_id	
+			AND a.supplier_id = s.id
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+</mapper>

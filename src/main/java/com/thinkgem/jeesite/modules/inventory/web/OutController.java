@@ -92,7 +92,7 @@ public class OutController extends BaseController {
 		}
 		inventoryService.save(inventory);
 		addMessage(redirectAttributes, "保存出库单成功");
-		return "redirect:" + Global.getAdminPath() + "/inventory/out/?repage";
+		return "redirect:" + Global.getAdminPath() + "/inventory/out/form?id="+inventory.getId();
 	}
 
 	@RequestMapping(value = "delete")

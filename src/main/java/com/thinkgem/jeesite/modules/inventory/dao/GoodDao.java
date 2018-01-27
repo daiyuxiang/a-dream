@@ -5,15 +5,15 @@ package com.thinkgem.jeesite.modules.inventory.dao;
 
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
-import com.thinkgem.jeesite.modules.inventory.entity.Inventory;
+import com.thinkgem.jeesite.modules.inventory.entity.Good;
 
 /**
- * 出入库DAO接口
+ * 货物DAO接口
  * 
  * @author daiyuxiang
  * @version 2017-08-23
  */
 @MyBatisDao
-public interface InventoryDao extends CrudDao<Inventory> {
+public interface GoodDao extends CrudDao<Good> {
 
 }

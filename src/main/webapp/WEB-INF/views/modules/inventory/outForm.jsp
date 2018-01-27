@@ -4,23 +4,13 @@
 <head>
 	<title>出库管理</title>
 	<meta name="decorator" content="default"/>
-	<script type="text/javascript">
-		var tempTr = '<tr style="text-align:center">'+
-							'<td><input type="text" name="goodsName" class="input-small"/></td>'+
-							'<td><input type="text" name="goodsArea" htmlEscape="false" class="input-small"/></td>'+
-							'<td><input type="text" name="factoryNo" htmlEscape="false" class="input-small"/></td>'+
-							'<td><input type="text" name="goodsSize" htmlEscape="false" class="input-small"/></td>'+
-							'<td><input type="text" name="goodsWeight" htmlEscape="false" class="input-mini"/></td>'+
-							'<td><input type="text" name="num" htmlEscape="false" class="input-mini"/></td>'+
-							'<td><input type="text" name="price" htmlEscape="false" class="input-mini"/></td>'+
-							'<td><input type="text" name="direction" htmlEscape="false" class="input-small"/></td>'+
-							'<td><input type="text" name="location" htmlEscape="false" class="input-small"/></td>'+
-							'<td>状态</td>'+
-							'<td></td>'+
-					'</tr>';
 	
+	<link href="${ctxStatic}/jqGrid/4.6/css/ui.jqgrid.css" type="text/css" rel="stylesheet" />
+	<script src="${ctxStatic}/jqGrid/4.7/js/jquery.jqGrid.js" type="text/javascript"></script>
+	<script src="${ctxStatic}/jqGrid/4.7/js/jquery.jqGrid.extend.js" type="text/javascript"></script>
+	
+	<script type="text/javascript">
 		$(document).ready(function() {
-			//$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
@@ -28,7 +18,6 @@
 				},
 				errorContainer: "#messageBox",
 				errorPlacement: function(error, element) {
-					$("#messageBox").text("输入有误，请先更正。");
 					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
 						error.appendTo(element.parent().parent());
 					} else {
@@ -36,14 +25,78 @@
 					}
 				}
 			});
-			
-			$('#btnAdd').on('click',function() {
-				var temp = tempTr;
-				$('#inventoryTable').append(temp)
+						
+			$('#dataGrid').dataGrid({
+				url:'${ctx}/inventory/inventoryItem/list?inventoryId=${inventory.id}',
+				// 设置数据表格列
+				columnModel: [
+					{header:'产品名称', name:'goodsName', index:'goodsName', width:100},
+					{header:'产品产地', name:'goodsArea', index:'goodsArea', width:100},
+					{header:'出厂编号', name:'factoryNo', index:'factoryNo', width:100},
+					{header:'产品尺寸', name:'goodsSize', index:'goodsSize', width:100, sortable:false},
+					{header:'产品重量', name:'goodsWeight', index:'goodsWeight', width:50, sortable:false},
+					{header:'数量', name:'num', index:'num', width:30, sortable:false},
+					{header:'单价', name:'price', index:'price', width:30, sortable:false},
+					{header:'方向', name:'direction', index:'direction', width:100, sortable:false},
+					{header:'地点', name:'location', index:'location', width:100, sortable:false},
+					{header:'状态', name:'goodsType', index:'goodsType', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){
+						return getDictLabel(${fns:getDictListJson('goods_type')}, val, '未知', true);
+					}},
+					{header:'操作', name:'actions', width:80, fixed:true, sortable:false, fixed:true, formatter: function(val, obj, row, act){
+						var actions = [];
+						
+						if(row.goodsType=='1') {
+							actions.push('<a href="javascript:void(0);" class="btnList" title="删除出库明细" onclick="deleteItem(\''+row.id+'\')">删除</a>&nbsp;');
+						}
+						
+						return actions.join('');
+					}}
+				],
+				ajaxSuccess: function(data){ // 加载成功后执行方法
+					
+				}
 			});
+			
+			
 		});
 		
+		function openItem(id) {			
+			if('${inventory.id}'=='') {
+				alertx("不能新增明细");
+				return;
+			}
+			
+			var title = "选择明细";
+			var url = "iframe:${ctx}/inventory/good/list";
+			
+			top.$.jBox.open(url,title,$(top.document).width()-240,$(top.document).height()-240,{
+				buttons:{"选择":"ok", "取消":true}, bottomText:"",submit:function(v, h, f){
+					if (v=="ok"){
+						
+					} 
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+		}
 		
+		function deleteItem(id) {
+			confirmx('确认要删除该出库明细吗？',function() {
+
+				$.ajax({		 
+					url: "${ctx}/inventory/inventoryItem/delete",
+					type: "post",
+					dataType: "json",
+					data: {"id":id},
+					success: function(data){
+						if(data.status=="1"){	
+							$('#dataGrid').trigger("reloadGrid");	
+						}
+					}
+				});
+				
+			});
+		} 
 	</script>
 </head>
 <body>
@@ -53,7 +106,6 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="inventory" action="${ctx}/inventory/out/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<form:hidden path="type" value="1"/>
 		<sys:message content="${message}"/>
 		<fieldset>
 			<table class="table-form">
@@ -88,52 +140,16 @@
 					value="<fmt:formatDate value="${inventory.openDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/></td>
 				</tr>
-				<tr>
-					<td class="tit" colspan="4" style="text-align:left">出库单明细
-						<input id="btnAdd" class="btn btn-primary" type="button" value="新增"/>
-					</td>
-				</tr>
-				
-				<tr>
-					<table class="table-form" id="inventoryTable">
-						<thead>
-							<tr>
-								<th>产品名称</th>
-								<th>产品产地</th>
-								<th>出厂编号</th>
-								<th>产品尺寸</th>
-								<th>产品重量</th>
-								<th>数量</th>
-								<th>单价</th>
-								<th>地点</th>
-								<th>方向</th>
-								<th>状态</th>
-								<th>操作</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr style="text-align:center;">
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-small"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-small"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-small"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-small"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-mini"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-mini"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-mini"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-small"/></td>
-								<td><form:input path="totalPrice" htmlEscape="false" class="input-small"/></td>
-								<td>状态</td>
-								<td>
-									cazuo
-								</td>
-							</tr>
-						</tbody>						
-					</table>
-				
-				</tr>
-				
 			</table>
+			
 		</fieldset>
+		
+		<div style="padding:10px 10px">
+			<input id="btnAddItem" class="btn btn-primary" type="button" value="新增" onclick="openItem()"/>&nbsp;
+		</div>
+		
+		<table id="dataGrid"></table>
+		<div class="pagination" id="dataGridPage"></div>			
 		
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;

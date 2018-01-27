@@ -88,5 +88,6 @@ public class InventoryController extends BaseController {
 		addMessage(redirectAttributes, "删除出入库成功");
 		return "redirect:"+Global.getAdminPath()+"/inventory/inventory/?repage";
 	}
-
+	
+	
 }

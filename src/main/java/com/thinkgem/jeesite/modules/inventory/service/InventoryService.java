@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
+import com.thinkgem.jeesite.modules.inventory.entity.Good;
 import com.thinkgem.jeesite.modules.inventory.entity.Inventory;
 import com.thinkgem.jeesite.modules.inventory.dao.InventoryDao;
 
@@ -43,5 +44,4 @@ public class InventoryService extends CrudService<InventoryDao, Inventory> {
 	public void delete(Inventory inventory) {
 		super.delete(inventory);
 	}
-	
 }
