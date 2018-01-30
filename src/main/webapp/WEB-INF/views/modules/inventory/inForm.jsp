@@ -46,7 +46,7 @@
 						var actions = [];
 						
 						if(row.goodsType=='1') {
-							actions.push('<a href="javascript:void(0);" class="btnList" title="编辑入库明细" onclick="openItem(\''+row.id+'\')">编辑</a>&nbsp;');
+							actions.push('<a href="javascript:void(0);" class="btnList" title="修改入库明细" onclick="openItem(\''+row.id+'\')">修改</a>&nbsp;');
 							actions.push('<a href="javascript:void(0);" class="btnList" title="删除入库明细" onclick="deleteItem(\''+row.id+'\')">删除</a>&nbsp;');
 						}
 						
@@ -106,7 +106,7 @@
 			confirmx('确认要删除该入库明细吗？',function() {
 
 				$.ajax({		 
-					url: "${ctx}/inventory/inventoryItem/delete",
+					url: "${ctx}/inventory/inventoryItem/deleteIn",
 					type: "post",
 					dataType: "json",
 					data: {"id":id},
@@ -142,11 +142,13 @@
 				</tr>
 				<tr>
 					<td class="tit">入库时间</td>
-					<td><input name="inventoryDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${inventory.inventoryDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/></td>
+					<td><input name="inventoryDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
+					value="<fmt:formatDate value="${inventory.inventoryDate}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					<span class="help-inline"><font color="red">*</font></span>
+					</td>
 					<td class="tit">总价</td>
-					<td><form:input path="totalPrice" htmlEscape="false" class="input-xlarge required"/><span class="help-inline"><font color="red">*</font></span></td>
+					<td><form:input path="totalPrice" htmlEscape="false" class="input-xlarge required number"/><span class="help-inline"><font color="red">*</font></span></td>
 				</tr>
 				<tr>
 					<td class="tit">订单号</td>
@@ -156,10 +158,10 @@
 				</tr>
 				<tr>
 					<td class="tit">发票</td>
-					<td><form:input path="invoice" htmlEscape="false" maxlength="2" class="input-xlarge "/></td>
+					<td><form:input path="invoice" htmlEscape="false" maxlength="50" class="input-xlarge "/></td>
 					<td class="tit">到票日期</td>
 					<td><input name="arrivalDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${inventory.arrivalDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					value="<fmt:formatDate value="${inventory.arrivalDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/></td>
 				</tr>
 			</table>
@@ -175,7 +177,7 @@
 		
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="window.location.href='${ctx}/inventory/in/list'"/>
 		</div>
 	</form:form>
 

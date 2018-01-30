@@ -25,7 +25,8 @@
 		b.direction AS "direction",
 		b.location AS "location",
 		b.goods_type AS "goodsType",
-		s.supplier_name AS "supplierName"
+		s.supplier_name AS "supplierName",
+		o.name AS "companyName"
 	</sql>
 
 
@@ -34,12 +35,38 @@
 		<include refid="goodColumns" />
 		FROM ts_inventory a,
 		     ts_inventory_item b,
-		     ts_supplier s
+		     ts_supplier s,
+		     sys_office o  
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			AND b.del_flag = #{DEL_FLAG_NORMAL}
 			AND a.id = 	b.inventory_id	
 			AND a.supplier_id = s.id
+			AND a.company_id = o.id
+			<if test="companyId != null and companyId != ''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="inventoryNo != null and inventoryNo != ''">
+				AND a.inventory_no LIKE 
+					<if test="dbName == 'oracle'">'%'||#{inventoryNo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{inventoryNo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{inventoryNo},'%')</if>
+			</if>
+			<if test="supplierId != null and supplierId != ''">
+				AND a.supplier_id = #{supplierId}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="goodsType != null and goodsType != ''">
+				AND b.goods_type = #{goodsType}
+			</if>
+			<if test="inventoryDateBegin != null and inventoryDateBegin != ''">
+				<![CDATA[ AND DATE_FORMAT(a.inventory_date,'%Y-%m-%d') >= DATE_FORMAT(#{inventoryDateBegin},'%Y-%m-%d') ]]>   				  
+			</if>
+			<if test="inventoryDateEnd != null and inventoryDateEnd != ''">
+				<![CDATA[ AND DATE_FORMAT(a.inventory_date,'%Y-%m-%d') <= DATE_FORMAT(#{inventoryDateEnd},'%Y-%m-%d') ]]>   				  			
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

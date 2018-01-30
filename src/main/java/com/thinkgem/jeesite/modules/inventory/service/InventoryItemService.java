@@ -44,4 +44,7 @@ public class InventoryItemService extends CrudService<InventoryItemDao, Inventor
 		super.delete(inventoryItem);
 	}
 	
+	public List<InventoryItem> findListByIds(String[] ids) {
+		return dao.findListByIds(ids);
+	}
 }

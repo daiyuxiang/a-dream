@@ -97,7 +97,7 @@ public class Inventory extends DataEntity<Inventory> {
 		this.totalPrice = totalPrice;
 	}
 
-	@Length(min = 0, max = 2, message = "发票长度必须介于 0 和 2 之间")
+	@Length(min = 0, max = 50, message = "发票长度必须介于 0 和 50 之间")
 	public String getInvoice() {
 		return invoice;
 	}

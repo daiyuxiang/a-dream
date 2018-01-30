@@ -47,13 +47,13 @@
 				AND a.company_id = #{companyId}
 			</if>
 			<if test="inventoryNo != null and inventoryNo != ''">
-				AND a.inventory_no = #{inventoryNo}
+				AND a.inventory_no LIKE 
+					<if test="dbName == 'oracle'">'%'||#{inventoryNo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{inventoryNo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{inventoryNo},'%')</if>
 			</if>
 			<if test="supplierId != null and supplierId != ''">
 				AND a.supplier_id = #{supplierId}
-			</if>
-			<if test="inventoryDate != null and inventoryDate != ''">
-				AND a.inventory_date = #{inventoryDate}
 			</if>
 			<if test="totalPrice != null and totalPrice != ''">
 				AND a.total_price = #{totalPrice}

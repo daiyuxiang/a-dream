@@ -15,6 +15,7 @@
 		a.direction AS "direction",
 		a.location AS "location",
 		a.goods_type AS "goodsType",
+		a.old_id AS "oldId",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -50,7 +51,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.goods_type,a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -87,6 +88,7 @@
 			direction,
 			location,
 			goods_type,
+			old_id,
 			create_by,
 			create_date,
 			update_by,
@@ -106,6 +108,7 @@
 			#{direction},
 			#{location},
 			#{goodsType},
+			#{oldId},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -128,6 +131,7 @@
 			direction = #{direction},
 			location = #{location},
 			goods_type = #{goodsType},
+			old_id = #{oldId},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}

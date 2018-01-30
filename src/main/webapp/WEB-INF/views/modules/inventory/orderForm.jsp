@@ -36,13 +36,15 @@
 		<div class="control-group">
 			<label class="control-label">订单号：</label>
 			<div class="controls">
-				<form:input path="orderNo" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				<form:input path="orderNo" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font></span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">产品名称：</label>
 			<div class="controls">
-				<form:input path="goodName" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				<form:input path="goodName" htmlEscape="false" maxlength="100" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font></span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -66,7 +68,7 @@
 		<div class="control-group">
 			<label class="control-label">预计到货时间：</label>
 			<div class="controls">
-				<input name="arrivalDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="arrivalDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${order.arrivalDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</div>
@@ -80,13 +82,15 @@
 		<div class="control-group">
 			<label class="control-label">数量：</label>
 			<div class="controls">
-				<form:input path="num" htmlEscape="false" maxlength="11" class="input-xlarge "/>
+				<form:input path="num" htmlEscape="false" maxlength="11" class="input-xlarge required number"/>
+				<span class="help-inline"><font color="red">*</font></span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">单价：</label>
 			<div class="controls">
-				<form:input path="price" htmlEscape="false" class="input-xlarge "/>
+				<form:input path="price" htmlEscape="false" class="input-xlarge required number"/>
+				<span class="help-inline"><font color="red">*</font></span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -109,9 +113,10 @@
 		<div class="control-group">
 			<label class="control-label">提醒时间：</label>
 			<div class="controls">
-				<input name="reminderDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="reminderDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
 					value="<fmt:formatDate value="${order.reminderDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+				<span class="help-inline"><font color="red">*</font></span>	
 			</div>
 		</div>
 		<div class="control-group">

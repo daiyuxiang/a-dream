@@ -35,8 +35,8 @@
 					{header:'出厂编号', name:'factoryNo', index:'factoryNo', width:100},
 					{header:'产品尺寸', name:'goodsSize', index:'goodsSize', width:100, sortable:false},
 					{header:'产品重量', name:'goodsWeight', index:'goodsWeight', width:50, sortable:false},
-					{header:'数量', name:'num', index:'num', width:30, sortable:false},
-					{header:'单价', name:'price', index:'price', width:30, sortable:false},
+					{header:'数量', name:'num', index:'num', width:30, sortable:false,editable : true},
+					{header:'单价', name:'price', index:'price', width:30, sortable:false,editable : true},
 					{header:'方向', name:'direction', index:'direction', width:100, sortable:false},
 					{header:'地点', name:'location', index:'location', width:100, sortable:false},
 					{header:'状态', name:'goodsType', index:'goodsType', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){
@@ -45,7 +45,7 @@
 					{header:'操作', name:'actions', width:80, fixed:true, sortable:false, fixed:true, formatter: function(val, obj, row, act){
 						var actions = [];
 						
-						if(row.goodsType=='1') {
+						if(row.goodsType=='2') {
 							actions.push('<a href="javascript:void(0);" class="btnList" title="删除出库明细" onclick="deleteItem(\''+row.id+'\')">删除</a>&nbsp;');
 						}
 						
@@ -55,23 +55,65 @@
 				ajaxSuccess: function(data){ // 加载成功后执行方法
 					
 				}
+				
 			});
 			
 			
 		});
 		
-		function openItem(id) {			
+		function addItem(id) {			
 			if('${inventory.id}'=='') {
 				alertx("不能新增明细");
 				return;
 			}
 			
 			var title = "选择明细";
-			var url = "iframe:${ctx}/inventory/good/list";
+			var url = "iframe:${ctx}/inventory/good/selectIn";
 			
 			top.$.jBox.open(url,title,$(top.document).width()-240,$(top.document).height()-240,{
 				buttons:{"选择":"ok", "取消":true}, bottomText:"",submit:function(v, h, f){
 					if (v=="ok"){
+						var $iframe = $(h.find("iframe")[0]);						
+						var outItemList = [];
+						var inventoryId = "${inventory.id}";
+						
+						$iframe.contents().find("input[name='inventoryItemId']:checked").each(function() {   
+							var id = $(this).val();
+							var num  = $iframe.contents().find('#num-'+id).val();
+							var price  = $iframe.contents().find('#price-'+id).val();
+
+							var outItem = new Object(); 
+							outItem.oldId = id;
+							outItem.num = num;
+							outItem.price = price;
+							outItem.inventoryId = inventoryId;
+							outItemList.push(outItem);
+						});   
+						
+						if(outItemList.length == 0){
+							alertx("请选择要出库的明细");
+							return false;
+						}				
+						
+						$.ajax({
+							url: "${ctx}/inventory/inventoryItem/saveOut",
+							type: "post",
+					        contentType: "application/json",  
+							dataType: "json",
+							data: JSON.stringify(outItemList),
+							success: function(data){
+								if(data.status=="1"){	
+									$('#dataGrid').trigger("reloadGrid");	
+									return true;
+								}
+							},
+							error: function(XMLHttpRequest, textStatus, errorThrown) {
+								console.log(XMLHttpRequest.status);
+								console.log(XMLHttpRequest.readyState);
+								console.log(textStatus);
+							}
+							
+						});
 						
 					} 
 				}, loaded:function(h){
@@ -84,7 +126,7 @@
 			confirmx('确认要删除该出库明细吗？',function() {
 
 				$.ajax({		 
-					url: "${ctx}/inventory/inventoryItem/delete",
+					url: "${ctx}/inventory/inventoryItem/deleteOut",
 					type: "post",
 					dataType: "json",
 					data: {"id":id},
@@ -111,20 +153,22 @@
 			<table class="table-form">
 				<tr>
 					<td class="tit">出库单</td>
-					<td><form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-xlarge "/><span class="help-inline"><font color="red">*</font></span></td>
+					<td><form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-xlarge required"/><span class="help-inline"><font color="red">*</font></span></td>
 					<td class="tit">客户</td>
-					<td><form:select path="supplierId" class="input-medium">
+					<td><form:select path="supplierId" class="input-medium required">
 					<form:option value="" label=""/>
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
-				</form:select></td>
+				</form:select><span class="help-inline"><font color="red">*</font></span></td>
 				</tr>
 				<tr>
 					<td class="tit">出库时间</td>
-					<td><input name="inventoryDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+					<td><input name="inventoryDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
 					value="<fmt:formatDate value="${inventory.inventoryDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/></td>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					<span class="help-inline"><font color="red">*</font></span>
+					</td>
 					<td class="tit">总价</td>
-					<td><form:input path="totalPrice" htmlEscape="false" class="input-xlarge "/></td>
+					<td><form:input path="totalPrice" htmlEscape="false" class="input-xlarge required number"/><span class="help-inline"><font color="red">*</font></span></td>
 				</tr>
 				<tr>
 					<td class="tit">订单号</td>
@@ -134,7 +178,7 @@
 				</tr>
 				<tr>
 					<td class="tit">发票</td>
-					<td><form:input path="invoice" htmlEscape="false" maxlength="2" class="input-xlarge "/></td>
+					<td><form:input path="invoice" htmlEscape="false" maxlength="50" class="input-xlarge "/></td>
 					<td class="tit">开票日期</td>
 					<td><input name="openDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
 					value="<fmt:formatDate value="${inventory.openDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
@@ -145,7 +189,7 @@
 		</fieldset>
 		
 		<div style="padding:10px 10px">
-			<input id="btnAddItem" class="btn btn-primary" type="button" value="新增" onclick="openItem()"/>&nbsp;
+			<input id="btnAddItem" class="btn btn-primary" type="button" value="新增" onclick="addItem()"/>&nbsp;
 		</div>
 		
 		<table id="dataGrid"></table>

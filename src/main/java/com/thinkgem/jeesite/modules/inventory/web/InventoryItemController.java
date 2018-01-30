@@ -3,6 +3,11 @@
  */
 package com.thinkgem.jeesite.modules.inventory.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +27,6 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.inventory.entity.InventoryItem;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryItemService;
-import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 
 /**
@@ -34,9 +39,6 @@ import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 @RequestMapping(value = "${adminPath}/inventory/inventoryItem")
 public class InventoryItemController extends BaseController {
 
-	@Autowired
-	private InventoryService inventoryService;
-	
 	@Autowired
 	private InventoryItemService inventoryItemService;
 
@@ -75,9 +77,8 @@ public class InventoryItemController extends BaseController {
 		return "modules/inventory/inventoryItemForm";
 	}
 
-	@RequestMapping(value = "save")
-	public @ResponseBody MessageBean<String> save(InventoryItem inventoryItem, Model model,
-			RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "saveIn")
+	public @ResponseBody MessageBean<String> saveIn(InventoryItem inventoryItem, Model model) {
 		MessageBean<String> messageBen = new MessageBean<String>();
 
 		if (!beanValidator(model, inventoryItem)) {
@@ -95,13 +96,84 @@ public class InventoryItemController extends BaseController {
 		return messageBen;
 	}
 
-	@RequestMapping(value = "delete")
-	public @ResponseBody MessageBean<String> delete(InventoryItem inventoryItem,
-			RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "saveOut")
+	public @ResponseBody MessageBean<String> saveOut(@RequestBody(required = true) List<InventoryItem> outItemList,
+			Model model) {
 		MessageBean<String> messageBen = new MessageBean<String>();
 
-		inventoryItemService.delete(inventoryItem);
+		List<String> idList = new ArrayList<String>();
 
+		for (InventoryItem outItem : outItemList) {
+			idList.add(outItem.getOldId());
+		}
+
+		List<InventoryItem> inItemList = inventoryItemService.findListByIds(idList.toArray(new String[idList.size()]));
+		Map<String, InventoryItem> inItemMap = new HashMap<String, InventoryItem>();
+
+		for (InventoryItem inItem : inItemList) {
+			inItemMap.put(inItem.getId(), inItem);
+		}
+
+		for (InventoryItem outItem : outItemList) {
+			InventoryItem inItem = inItemMap.get(outItem.getOldId());
+
+			outItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
+			outItem.setDirection(inItem.getDirection());
+			outItem.setFactoryNo(inItem.getFactoryNo());
+			outItem.setGoodsArea(inItem.getGoodsArea());
+			outItem.setGoodsName(inItem.getGoodsName());
+			outItem.setGoodsSize(inItem.getGoodsSize());
+			outItem.setGoodsWeight(inItem.getGoodsWeight());
+			outItem.setLocation(inItem.getLocation());
+
+			// 保存出库明细
+			inventoryItemService.save(outItem);
+
+			// 修改入库明细
+			int inNum = Integer.valueOf(inItem.getNum());
+			int outNum = Integer.valueOf(outItem.getNum());
+
+			if (inNum > outNum) {
+				InventoryItem newItem = (InventoryItem) inItem.clone();
+				newItem.setId(null);
+				newItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
+				newItem.setNum(String.valueOf(outNum));
+				inventoryItemService.save(newItem);
+				
+				inItem.setNum(String.valueOf(inNum-outNum));
+				inventoryItemService.save(inItem);
+			} else {
+				inItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
+				inventoryItemService.save(inItem);			
+			}
+
+		}
+
+		messageBen.setStatus(MessageBean.SUCCESS);
+		return messageBen;
+	}
+
+	@RequestMapping(value = "deleteIn")
+	public @ResponseBody MessageBean<String> deleteIn(InventoryItem inItem) {
+		MessageBean<String> messageBen = new MessageBean<String>();
+
+		inventoryItemService.delete(inItem);
+
+		messageBen.setStatus(MessageBean.SUCCESS);
+
+		return messageBen;
+	}
+	
+	@RequestMapping(value = "deleteOut")
+	public @ResponseBody MessageBean<String> deleteOut(InventoryItem outItem) {
+		MessageBean<String> messageBen = new MessageBean<String>();
+
+		inventoryItemService.delete(outItem);
+		
+		InventoryItem inItem = inventoryItemService.get(outItem.getOldId());		
+		inItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
+		inventoryItemService.save(inItem);
+			
 		messageBen.setStatus(MessageBean.SUCCESS);
 
 		return messageBen;
@@ -109,7 +181,7 @@ public class InventoryItemController extends BaseController {
 
 	@RequestMapping(value = "selectIn")
 	public String selectIn(InventoryItem inventoryItem, Model model) {
-		
+
 		model.addAttribute("inventoryItem", inventoryItem);
 		return "modules/inventory/inventoryItemForm";
 	}

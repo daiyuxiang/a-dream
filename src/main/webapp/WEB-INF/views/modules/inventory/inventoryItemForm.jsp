@@ -14,7 +14,7 @@
 					var data = $(form).serialize();
 				
 					$.ajax({
-						url: "${ctx}/inventory/inventoryItem/save",
+						url: "${ctx}/inventory/inventoryItem/saveIn",
 						type: "post",
 						dataType: "json",
 						data: data,

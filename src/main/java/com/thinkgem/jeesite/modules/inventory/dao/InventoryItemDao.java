@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.inventory.dao;
 
+import java.util.List;
+
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.inventory.entity.InventoryItem;
@@ -14,5 +16,5 @@ import com.thinkgem.jeesite.modules.inventory.entity.InventoryItem;
  */
 @MyBatisDao
 public interface InventoryItemDao extends CrudDao<InventoryItem> {
-	
+	public List<InventoryItem> findListByIds(String[] ids);
 }

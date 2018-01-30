@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.inventory.dao.InventoryItemDao">
+
+	<select id="findListByIds" parameterType="java.util.List"
+		resultType="InventoryItem">
+		SELECT
+		<include refid="inventoryItemColumns" />
+		FROM ts_inventory_item a
+		<where>
+			a.del_flag = '0'
+			AND a.id in
+			<foreach collection="array" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+			ORDER BY a.update_date DESC
+	</select>
+
+
+
+</mapper>

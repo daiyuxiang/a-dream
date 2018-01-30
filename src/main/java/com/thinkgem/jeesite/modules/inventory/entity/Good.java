@@ -26,21 +26,25 @@ public class Good extends DataEntity<Good> {
 	private Date openDate; // 开票日期
 	private Date arrivalDate; // 到票时间
 	private String type; // 主表类型：1入库 2出库
-	private String companyId; //公司ID
-	
-	private String inventoryItemId;		// 明细表ID
-	private String goodsName;		// 产品名称
-	private String goodsArea;		// 产品产地
-	private String factoryNo;		// 出厂编号
-	private String goodsSize;		// 产品尺寸
-	private String goodsWeight;		// 产品重量
-	private String num;		// 数量
-	private String price;		// 单价
-	private String direction;		// 方向
-	private String location;		// 地点
-	private String goodsType;		// 货物状态:1在库 2出库
+	private String companyId; // 公司ID
+
+	private String inventoryItemId; // 明细表ID
+	private String goodsName; // 产品名称
+	private String goodsArea; // 产品产地
+	private String factoryNo; // 出厂编号
+	private String goodsSize; // 产品尺寸
+	private String goodsWeight; // 产品重量
+	private String num; // 数量
+	private String price; // 单价
+	private String direction; // 方向
+	private String location; // 地点
+	private String goodsType; // 货物状态:1在库 2出库
+
+	private Date inventoryDateBegin;
+	private Date inventoryDateEnd;
 
 	private String supplierName; // 供应商名称
+	private String companyName; //公司名称
 
 	public Good() {
 		super();
@@ -234,7 +238,29 @@ public class Good extends DataEntity<Good> {
 		this.supplierName = supplierName;
 	}
 
-	
+	public Date getInventoryDateBegin() {
+		return inventoryDateBegin;
+	}
+
+	public void setInventoryDateBegin(Date inventoryDateBegin) {
+		this.inventoryDateBegin = inventoryDateBegin;
+	}
+
+	public Date getInventoryDateEnd() {
+		return inventoryDateEnd;
+	}
+
+	public void setInventoryDateEnd(Date inventoryDateEnd) {
+		this.inventoryDateEnd = inventoryDateEnd;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 
 	
 }
