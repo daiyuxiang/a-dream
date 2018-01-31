@@ -63,6 +63,15 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">产品品牌：</label>
+			<div class="controls">
+				<form:select path="goodsBrand" class="input-medium required">
+					<form:options items="${brandList}" itemLabel="brandName" itemValue="id" htmlEscape="false"/>
+				</form:select>
+				<span class="help-inline"><font color="red">*</font></span>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">产品产地：</label>
 			<div class="controls">
 				<form:input path="goodsArea" htmlEscape="false" maxlength="100" class="input-large "/>

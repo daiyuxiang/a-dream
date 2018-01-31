@@ -6,6 +6,7 @@
 		a.id AS "id",
 		a.inventory_id AS "inventoryId",
 		a.goods_name AS "goodsName",
+		a.goods_brand AS "goodsBrand",
 		a.goods_area AS "goodsArea",
 		a.factory_no AS "factoryNo",
 		a.goods_size AS "goodsSize",
@@ -21,10 +22,12 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		b.brand_name AS "brandName"
 	</sql>
 	
 	<sql id="inventoryItemJoins">
+		LEFT JOIN ts_brand b ON a.goods_brand = b.id
 	</sql>
     
 	<select id="get" resultType="InventoryItem">
@@ -79,6 +82,7 @@
 			id,
 			inventory_id,
 			goods_name,
+			goods_brand,
 			goods_area,
 			factory_no,
 			goods_size,
@@ -99,6 +103,7 @@
 			#{id},
 			#{inventoryId},
 			#{goodsName},
+			#{goodsBrand},
 			#{goodsArea},
 			#{factoryNo},
 			#{goodsSize},
@@ -122,6 +127,7 @@
 		UPDATE ts_inventory_item SET 	
 			inventory_id = #{inventoryId},
 			goods_name = #{goodsName},
+			goods_brand = #{goodsBrand},
 			goods_area = #{goodsArea},
 			factory_no = #{factoryNo},
 			goods_size = #{goodsSize},

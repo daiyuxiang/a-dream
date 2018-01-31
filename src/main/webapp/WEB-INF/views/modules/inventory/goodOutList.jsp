@@ -34,6 +34,15 @@
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select>
 			</li>
+			<li><label>产品名称：</label>
+				<form:input path="goodsName" htmlEscape="false" maxlength="100" class="input-medium"/>
+			</li>
+			<li><label>产品品牌：</label>
+				<form:select path="goodsBrand" class="input-medium">
+					<form:option value="" label=""/>
+					<form:options items="${brandList}" itemLabel="brandName" itemValue="id" htmlEscape="false"/>
+				</form:select>
+			</li>
 			<li><label>出库日期：</label>		
 				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:163px;"
 				value="<fmt:formatDate value="${good.inventoryDateBegin}" pattern="yyyy-MM-dd"/>"
@@ -58,6 +67,7 @@
 				<th>出库日期</th>
 				<th>客户</th>
 				<th>产品名称</th>
+				<th>产品品牌</th>
 				<th>产品产地</th>
 				<th>出厂编号</th>
 				<th>产品尺寸</th>
@@ -83,6 +93,9 @@
 				</td>	
 				<td>
 					${good.goodsName}
+				</td>
+				<td>
+					${good.brandName}
 				</td>
 				<td>
 					${good.goodsArea}

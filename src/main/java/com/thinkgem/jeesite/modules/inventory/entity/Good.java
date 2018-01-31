@@ -30,6 +30,7 @@ public class Good extends DataEntity<Good> {
 
 	private String inventoryItemId; // 明细表ID
 	private String goodsName; // 产品名称
+	private String goodsBrand; // 产品品牌
 	private String goodsArea; // 产品产地
 	private String factoryNo; // 出厂编号
 	private String goodsSize; // 产品尺寸
@@ -44,7 +45,8 @@ public class Good extends DataEntity<Good> {
 	private Date inventoryDateEnd;
 
 	private String supplierName; // 供应商名称
-	private String companyName; //公司名称
+	private String companyName; // 公司名称
+	private String brandName; // 品牌名称
 
 	public Good() {
 		super();
@@ -262,5 +264,20 @@ public class Good extends DataEntity<Good> {
 		this.companyName = companyName;
 	}
 
-	
+	public String getGoodsBrand() {
+		return goodsBrand;
+	}
+
+	public void setGoodsBrand(String goodsBrand) {
+		this.goodsBrand = goodsBrand;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+
 }

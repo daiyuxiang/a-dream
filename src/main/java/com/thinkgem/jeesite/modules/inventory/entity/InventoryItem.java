@@ -18,6 +18,7 @@ public class InventoryItem extends DataEntity<InventoryItem> implements Cloneabl
 	private static final long serialVersionUID = 1L;
 	private String inventoryId; // 主表ID
 	private String goodsName; // 产品名称
+	private String goodsBrand; // 产品品牌
 	private String goodsArea; // 产品产地
 	private String factoryNo; // 出厂编号
 	private String goodsSize; // 产品尺寸
@@ -29,6 +30,8 @@ public class InventoryItem extends DataEntity<InventoryItem> implements Cloneabl
 	private String goodsType; // 货物状态:1在库 2出库
 
 	private String oldId; // 原物资Id
+
+	private String brandName; // 品牌名称
 
 	public InventoryItem() {
 		super();
@@ -153,6 +156,22 @@ public class InventoryItem extends DataEntity<InventoryItem> implements Cloneabl
 			e.printStackTrace();
 		}
 		return item;
+	}
+
+	public String getGoodsBrand() {
+		return goodsBrand;
+	}
+
+	public void setGoodsBrand(String goodsBrand) {
+		this.goodsBrand = goodsBrand;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 }

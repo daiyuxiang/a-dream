@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.inventory.entity.Brand;
 import com.thinkgem.jeesite.modules.inventory.entity.Good;
 import com.thinkgem.jeesite.modules.inventory.entity.Supplier;
+import com.thinkgem.jeesite.modules.inventory.service.BrandService;
 import com.thinkgem.jeesite.modules.inventory.service.GoodService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
@@ -38,6 +40,9 @@ public class GoodController extends BaseController {
 
 	@Autowired
 	private SupplierService supplierService;
+
+	@Autowired
+	private BrandService brandService;
 
 	@ModelAttribute
 	public Good get() {
@@ -60,6 +65,9 @@ public class GoodController extends BaseController {
 				new String[] { InventoryEnum.SUPPLIER_TYPE_1.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
 		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
 
+		Brand brandParam = new Brand();
+		List<Brand> brandList = brandService.findList(brandParam);
+
 		good.setType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 		good.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 
@@ -67,6 +75,7 @@ public class GoodController extends BaseController {
 
 		model.addAttribute("page", page);
 		model.addAttribute("supplierList", supplierList);
+		model.addAttribute("brandList", brandList);
 
 		return "modules/inventory/goodInList";
 	}
@@ -79,6 +88,9 @@ public class GoodController extends BaseController {
 				new String[] { InventoryEnum.SUPPLIER_TYPE_2.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
 		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
 
+		Brand brandParam = new Brand();
+		List<Brand> brandList = brandService.findList(brandParam);
+
 		good.setType(InventoryEnum.INVENTORY_TYPE_2.getValue());
 		good.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
 
@@ -86,6 +98,7 @@ public class GoodController extends BaseController {
 
 		model.addAttribute("page", page);
 		model.addAttribute("supplierList", supplierList);
+		model.addAttribute("brandList", brandList);
 
 		return "modules/inventory/goodOutList";
 	}
@@ -98,6 +111,9 @@ public class GoodController extends BaseController {
 				new String[] { InventoryEnum.SUPPLIER_TYPE_1.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
 		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
 
+		Brand brandParam = new Brand();
+		List<Brand> brandList = brandService.findList(brandParam);
+
 		good.setType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 		good.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 
@@ -105,6 +121,7 @@ public class GoodController extends BaseController {
 
 		model.addAttribute("page", page);
 		model.addAttribute("supplierList", supplierList);
+		model.addAttribute("brandList", brandList);
 
 		return "modules/inventory/selectIn";
 	}

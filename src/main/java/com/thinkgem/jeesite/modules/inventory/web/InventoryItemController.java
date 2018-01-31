@@ -19,13 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.MessageBean;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.inventory.entity.Brand;
 import com.thinkgem.jeesite.modules.inventory.entity.InventoryItem;
+import com.thinkgem.jeesite.modules.inventory.service.BrandService;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryItemService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 
@@ -41,6 +42,9 @@ public class InventoryItemController extends BaseController {
 
 	@Autowired
 	private InventoryItemService inventoryItemService;
+
+	@Autowired
+	private BrandService brandService;
 
 	@ModelAttribute
 	public InventoryItem get(@RequestParam(required = false) String id,
@@ -73,7 +77,12 @@ public class InventoryItemController extends BaseController {
 
 	@RequestMapping(value = "form")
 	public String form(InventoryItem inventoryItem, Model model) {
+		Brand brandParam = new Brand();
+		List<Brand> brandList = brandService.findList(brandParam);
+
 		model.addAttribute("inventoryItem", inventoryItem);
+		model.addAttribute("brandList", brandList);
+
 		return "modules/inventory/inventoryItemForm";
 	}
 
@@ -139,12 +148,12 @@ public class InventoryItemController extends BaseController {
 				newItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
 				newItem.setNum(String.valueOf(outNum));
 				inventoryItemService.save(newItem);
-				
-				inItem.setNum(String.valueOf(inNum-outNum));
+
+				inItem.setNum(String.valueOf(inNum - outNum));
 				inventoryItemService.save(inItem);
 			} else {
 				inItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
-				inventoryItemService.save(inItem);			
+				inventoryItemService.save(inItem);
 			}
 
 		}
@@ -163,17 +172,17 @@ public class InventoryItemController extends BaseController {
 
 		return messageBen;
 	}
-	
+
 	@RequestMapping(value = "deleteOut")
 	public @ResponseBody MessageBean<String> deleteOut(InventoryItem outItem) {
 		MessageBean<String> messageBen = new MessageBean<String>();
 
 		inventoryItemService.delete(outItem);
-		
-		InventoryItem inItem = inventoryItemService.get(outItem.getOldId());		
+
+		InventoryItem inItem = inventoryItemService.get(outItem.getOldId());
 		inItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 		inventoryItemService.save(inItem);
-			
+
 		messageBen.setStatus(MessageBean.SUCCESS);
 
 		return messageBen;

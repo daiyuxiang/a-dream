@@ -16,6 +16,7 @@
 		a.type AS "type",
 		a.company_id AS "companyId",		
 		b.goods_name AS "goodsName",
+		b.goods_brand AS "goodsBrand",
 		b.goods_area AS "goodsArea",
 		b.factory_no AS "factoryNo",
 		b.goods_size AS "goodsSize",
@@ -26,7 +27,8 @@
 		b.location AS "location",
 		b.goods_type AS "goodsType",
 		s.supplier_name AS "supplierName",
-		o.name AS "companyName"
+		o.name AS "companyName",
+		tb.brand_name AS "brandName"
 	</sql>
 
 
@@ -36,13 +38,15 @@
 		FROM ts_inventory a,
 		     ts_inventory_item b,
 		     ts_supplier s,
-		     sys_office o  
+		     sys_office o,
+		     ts_brand tb
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			AND b.del_flag = #{DEL_FLAG_NORMAL}
 			AND a.id = 	b.inventory_id	
 			AND a.supplier_id = s.id
 			AND a.company_id = o.id
+			AND b.goods_brand = tb.id
 			<if test="companyId != null and companyId != ''">
 				AND a.company_id = #{companyId}
 			</if>
@@ -60,6 +64,15 @@
 			</if>
 			<if test="goodsType != null and goodsType != ''">
 				AND b.goods_type = #{goodsType}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND b.goods_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+			<if test="goodsBrand != null and goodsBrand != ''">
+				AND b.goods_brand = #{goodsBrand}
 			</if>
 			<if test="inventoryDateBegin != null and inventoryDateBegin != ''">
 				<![CDATA[ AND DATE_FORMAT(a.inventory_date,'%Y-%m-%d') >= DATE_FORMAT(#{inventoryDateBegin},'%Y-%m-%d') ]]>   				  

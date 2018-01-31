@@ -29,7 +29,7 @@ public class Inventory extends DataEntity<Inventory> {
 	private Date openDate; // 开票日期
 	private Date arrivalDate; // 到票时间
 	private String type; // 类型：1入库 2出库
-	private String companyId; //公司ID
+	private String companyId; // 公司ID
 
 	private Date inventoryDateBegin;
 	private Date inventoryDateEnd;
@@ -165,5 +165,5 @@ public class Inventory extends DataEntity<Inventory> {
 		this.companyId = companyId;
 	}
 
-	
+
 }

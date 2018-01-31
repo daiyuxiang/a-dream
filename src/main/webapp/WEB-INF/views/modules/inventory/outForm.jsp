@@ -30,13 +30,14 @@
 				url:'${ctx}/inventory/inventoryItem/list?inventoryId=${inventory.id}',
 				// 设置数据表格列
 				columnModel: [
-					{header:'产品名称', name:'goodsName', index:'goodsName', width:100},
-					{header:'产品产地', name:'goodsArea', index:'goodsArea', width:100},
+					{header:'产品名称', name:'goodsName', index:'goodsName', width:150},
+					{header:'产品品牌', name:'brandName', index:'brandName', width:50},
+					{header:'产品产地', name:'goodsArea', index:'goodsArea', width:50},
 					{header:'出厂编号', name:'factoryNo', index:'factoryNo', width:100},
 					{header:'产品尺寸', name:'goodsSize', index:'goodsSize', width:100, sortable:false},
 					{header:'产品重量', name:'goodsWeight', index:'goodsWeight', width:50, sortable:false},
-					{header:'数量', name:'num', index:'num', width:30, sortable:false,editable : true},
-					{header:'单价', name:'price', index:'price', width:30, sortable:false,editable : true},
+					{header:'数量', name:'num', index:'num', width:30, sortable:false},
+					{header:'单价', name:'price', index:'price', width:30, sortable:false},
 					{header:'方向', name:'direction', index:'direction', width:100, sortable:false},
 					{header:'地点', name:'location', index:'location', width:100, sortable:false},
 					{header:'状态', name:'goodsType', index:'goodsType', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){
@@ -70,7 +71,7 @@
 			var title = "选择明细";
 			var url = "iframe:${ctx}/inventory/good/selectIn";
 			
-			top.$.jBox.open(url,title,$(top.document).width()-240,$(top.document).height()-240,{
+			top.$.jBox.open(url,title,$(top.document).width()-100,$(top.document).height()-160,{
 				buttons:{"选择":"ok", "取消":true}, bottomText:"",submit:function(v, h, f){
 					if (v=="ok"){
 						var $iframe = $(h.find("iframe")[0]);						

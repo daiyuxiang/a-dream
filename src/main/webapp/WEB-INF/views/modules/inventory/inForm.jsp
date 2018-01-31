@@ -11,6 +11,10 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			if('${inventory.totalPrice}'=='') {
+				$('#totalPrice').val('0');
+			}
+			
 			$("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
@@ -30,8 +34,9 @@
 				url:'${ctx}/inventory/inventoryItem/list?inventoryId=${inventory.id}',
 				// 设置数据表格列
 				columnModel: [
-					{header:'产品名称', name:'goodsName', index:'goodsName', width:100},
-					{header:'产品产地', name:'goodsArea', index:'goodsArea', width:100},
+					{header:'产品名称', name:'goodsName', index:'goodsName', width:150},
+					{header:'产品品牌', name:'brandName', index:'brandName', width:50},
+					{header:'产品产地', name:'goodsArea', index:'goodsArea', width:50},
 					{header:'出厂编号', name:'factoryNo', index:'factoryNo', width:100},
 					{header:'产品尺寸', name:'goodsSize', index:'goodsSize', width:100, sortable:false},
 					{header:'产品重量', name:'goodsWeight', index:'goodsWeight', width:50, sortable:false},
