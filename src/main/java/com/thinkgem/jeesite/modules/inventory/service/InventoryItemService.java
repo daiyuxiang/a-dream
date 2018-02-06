@@ -47,4 +47,6 @@ public class InventoryItemService extends CrudService<InventoryItemDao, Inventor
 	public List<InventoryItem> findListByIds(String[] ids) {
 		return dao.findListByIds(ids);
 	}
+	
+	
 }

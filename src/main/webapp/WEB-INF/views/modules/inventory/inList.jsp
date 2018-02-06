@@ -29,17 +29,17 @@
 				<form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
 			<li><label>供应商：</label>
-				<form:select path="supplierId" class="input-medium">
-					<form:option value="" label=""/>
+				<form:select path="supplierId" class="input-large">
+					<form:option value="" label="全选"/>
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select>
 			</li>
 			<li><label>入库日期：</label>		
-				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:163px;"
+				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
 				value="<fmt:formatDate value="${inventory.inventoryDateBegin}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 				　--　
-				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:163px;"
+				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
 					value="<fmt:formatDate value="${inventory.inventoryDateEnd}" pattern="yyyy-MM-dd"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			</li>

@@ -6,9 +6,12 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-
+			if('${inventoryItem.price}'=='') {
+				$('#price').val('0');
+			}
+			
 			$("#inventoryItemForm").validate({
-				submitHandler: function(form){		
+				submitHandler: function(form){	
 					$('#validateFlag').val('1');
 					
 					var data = $(form).serialize();
@@ -98,7 +101,7 @@
 		<div class="control-group">
 			<label class="control-label">数量：</label>
 			<div class="controls">
-				<form:input path="num" htmlEscape="false" maxlength="9" class="input-large required number"/>
+				<form:input path="num" htmlEscape="false" min="1" maxlength="9"  class="input-large required number"/>
 				<span class="help-inline"><font color="red">*</font></span>
 			</div>
 		</div>
@@ -110,7 +113,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">方向：</label>
+			<label class="control-label">货位：</label>
 			<div class="controls">
 				<form:input path="direction" htmlEscape="false" maxlength="100" class="input-large"/>
 			</div>
@@ -119,6 +122,18 @@
 			<label class="control-label">地点：</label>
 			<div class="controls">
 				<form:input path="location" htmlEscape="false" maxlength="100" class="input-large"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">条形码：</label>
+			<div class="controls">
+				<form:input path="barcode" htmlEscape="false" maxlength="16" class="input-large"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">图片位置：</label>
+			<div class="controls">
+				<form:input path="imageUrl" htmlEscape="false" maxlength="100" class="input-large"/>
 			</div>
 		</div>
 		

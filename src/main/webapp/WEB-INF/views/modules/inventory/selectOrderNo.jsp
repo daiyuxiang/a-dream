@@ -18,12 +18,11 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/inventory/order/">订单列表</a></li>
-		<li><a href="${ctx}/inventory/order/form">订单添加</a></li>
+		<li class="active"><a href="javascript:void(0);">订单列表</a></li>
 	</ul>
 	
 	
-	<form:form id="searchForm" modelAttribute="order" action="${ctx}/inventory/order/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="order" action="${ctx}/inventory/order/selectOrderNo" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -43,13 +42,11 @@
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
-	<c:if test="${not empty remindOrderNo}">
-		<span class="help-inline"><font color="red">订单号${remindOrderNo}的订单即将到货，请处理。</font></span>		
-	</c:if>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th></th>
 				<th>订单号</th>
 				<th>产品品牌</th>				
 				<th>产品名称</th>
@@ -62,15 +59,17 @@
 				<th>交付单位的货期</th>	
 				<th>提醒时间</th>	
 				<th>订单状态</th>		
-				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="order">
 			<tr>
-				<td><a href="${ctx}/inventory/order/form?id=${order.id}">
+				<td>
+					<input type="checkbox" name="orderNo" value="${order.orderNo}"/>
+				</td>
+				<td>
 					${order.orderNo}
-				</a></td>
+				</td>
 				<td>
 					${order.goodBrandName}
 				</td>
@@ -108,13 +107,6 @@
 					<c:if test="${order.orderStatus == '1'}">
 						处理完成
 					</c:if>
-				</td>
-				<td>
-					<c:if test="${order.orderStatus == '0'}">
-				    	<a href="${ctx}/inventory/order/updateStatus?id=${order.id}" onclick="return confirmx('确认要处理该订单吗？', this.href)">处理订单</a>
-					</c:if>
-				    <a href="${ctx}/inventory/order/form?id=${order.id}">修改</a>
-					<a href="${ctx}/inventory/order/delete?id=${order.id}" onclick="return confirmx('确认要删除该订单吗？', this.href)">删除</a>
 				</td>
 			</tr>
 		</c:forEach>

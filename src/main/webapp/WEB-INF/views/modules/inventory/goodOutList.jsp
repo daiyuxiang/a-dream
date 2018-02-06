@@ -20,6 +20,7 @@
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/inventory/good/inList">入库列表</a></li>
 		<li class="active"><a href="${ctx}/inventory/good/outList">出库列表</a></li>
+		<li><a href="${ctx}/inventory/good/totalList">统计列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="good" action="${ctx}/inventory/good/outList" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -29,10 +30,19 @@
 				<form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
 			<li><label>客户：</label>
-				<form:select path="supplierId" class="input-medium">
-					<form:option value="" label=""/>
+				<form:select path="supplierId" class="input-large">
+					<form:option value="" label="全选"/>
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select>
+			</li>
+			<li><label>出库日期：</label>		
+				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
+				value="<fmt:formatDate value="${good.inventoryDateBegin}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
+				　--　
+				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
+					value="<fmt:formatDate value="${good.inventoryDateEnd}" pattern="yyyy-MM-dd"/>"
+						onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			</li>
 			<li><label>产品名称：</label>
 				<form:input path="goodsName" htmlEscape="false" maxlength="100" class="input-medium"/>
@@ -43,15 +53,7 @@
 					<form:options items="${brandList}" itemLabel="brandName" itemValue="id" htmlEscape="false"/>
 				</form:select>
 			</li>
-			<li><label>出库日期：</label>		
-				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:163px;"
-				value="<fmt:formatDate value="${good.inventoryDateBegin}" pattern="yyyy-MM-dd"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
-				　--　
-				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:163px;"
-					value="<fmt:formatDate value="${good.inventoryDateEnd}" pattern="yyyy-MM-dd"/>"
-						onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
-			</li>
+			
 		
 		
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
@@ -82,6 +84,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="good">
 			<tr>
+				<td>
+					${good.companyName}
+				</td>
 				<td>
 					${good.inventoryNo}
 				</td>

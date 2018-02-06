@@ -28,6 +28,7 @@ import com.thinkgem.jeesite.modules.inventory.entity.Brand;
 import com.thinkgem.jeesite.modules.inventory.entity.InventoryItem;
 import com.thinkgem.jeesite.modules.inventory.service.BrandService;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryItemService;
+import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 
 /**
@@ -39,6 +40,9 @@ import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 @Controller
 @RequestMapping(value = "${adminPath}/inventory/inventoryItem")
 public class InventoryItemController extends BaseController {
+
+	@Autowired
+	private InventoryService inventoryService;
 
 	@Autowired
 	private InventoryItemService inventoryItemService;
@@ -85,6 +89,13 @@ public class InventoryItemController extends BaseController {
 
 		return "modules/inventory/inventoryItemForm";
 	}
+	
+	@RequestMapping(value = "updatePrice")
+	public String updatePrice(InventoryItem inventoryItem, Model model) {
+		model.addAttribute("inventoryItem", inventoryItem);
+
+		return "modules/inventory/priceForm";
+	}
 
 	@RequestMapping(value = "saveIn")
 	public @ResponseBody MessageBean<String> saveIn(InventoryItem inventoryItem, Model model) {
@@ -100,6 +111,9 @@ public class InventoryItemController extends BaseController {
 		}
 
 		inventoryItemService.save(inventoryItem);
+
+		// 修改主表总价
+		inventoryService.updateTotalPrice(inventoryItem.getInventoryId());
 
 		messageBen.setStatus(MessageBean.SUCCESS);
 		return messageBen;
@@ -129,6 +143,7 @@ public class InventoryItemController extends BaseController {
 			outItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
 			outItem.setDirection(inItem.getDirection());
 			outItem.setFactoryNo(inItem.getFactoryNo());
+			outItem.setGoodsBrand(inItem.getGoodsBrand());
 			outItem.setGoodsArea(inItem.getGoodsArea());
 			outItem.setGoodsName(inItem.getGoodsName());
 			outItem.setGoodsSize(inItem.getGoodsSize());
@@ -137,11 +152,15 @@ public class InventoryItemController extends BaseController {
 
 			// 保存出库明细
 			inventoryItemService.save(outItem);
+			
+			// 修改主表总价
+			inventoryService.updateTotalPrice(outItem.getInventoryId());
 
 			// 修改入库明细
 			int inNum = Integer.valueOf(inItem.getNum());
 			int outNum = Integer.valueOf(outItem.getNum());
 
+			// 入库数量大于出库数量,有余量
 			if (inNum > outNum) {
 				InventoryItem newItem = (InventoryItem) inItem.clone();
 				newItem.setId(null);
@@ -151,7 +170,8 @@ public class InventoryItemController extends BaseController {
 
 				inItem.setNum(String.valueOf(inNum - outNum));
 				inventoryItemService.save(inItem);
-			} else {
+				// 入库数量等于出库数量
+			} else if (inNum == outNum) {
 				inItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_2.getValue());
 				inventoryItemService.save(inItem);
 			}
@@ -168,6 +188,9 @@ public class InventoryItemController extends BaseController {
 
 		inventoryItemService.delete(inItem);
 
+		// 修改主表总价
+		inventoryService.updateTotalPrice(inItem.getInventoryId());
+		
 		messageBen.setStatus(MessageBean.SUCCESS);
 
 		return messageBen;
@@ -178,7 +201,10 @@ public class InventoryItemController extends BaseController {
 		MessageBean<String> messageBen = new MessageBean<String>();
 
 		inventoryItemService.delete(outItem);
-
+		
+		// 修改主表总价
+		inventoryService.updateTotalPrice(outItem.getInventoryId());
+		
 		InventoryItem inItem = inventoryItemService.get(outItem.getOldId());
 		inItem.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 		inventoryItemService.save(inItem);

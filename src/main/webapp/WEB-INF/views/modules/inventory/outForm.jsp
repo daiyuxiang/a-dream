@@ -8,9 +8,16 @@
 	<link href="${ctxStatic}/jqGrid/4.6/css/ui.jqgrid.css" type="text/css" rel="stylesheet" />
 	<script src="${ctxStatic}/jqGrid/4.7/js/jquery.jqGrid.js" type="text/javascript"></script>
 	<script src="${ctxStatic}/jqGrid/4.7/js/jquery.jqGrid.extend.js" type="text/javascript"></script>
+	<script src="${ctxStatic}/jqprint/jquery.jqprint-0.3.js" type="text/javascript"></script>
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
+			if('${inventory.totalPrice}'=='') {
+				$('#totalPrice').val('0');
+			}
+			$('#inventoryNo').attr('disabled','disabled');
+			$('#totalPrice').attr('disabled','disabled');	
+			
 			$("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
@@ -30,26 +37,25 @@
 				url:'${ctx}/inventory/inventoryItem/list?inventoryId=${inventory.id}',
 				// 设置数据表格列
 				columnModel: [
-					{header:'产品名称', name:'goodsName', index:'goodsName', width:150},
-					{header:'产品品牌', name:'brandName', index:'brandName', width:50},
-					{header:'产品产地', name:'goodsArea', index:'goodsArea', width:50},
-					{header:'出厂编号', name:'factoryNo', index:'factoryNo', width:100},
-					{header:'产品尺寸', name:'goodsSize', index:'goodsSize', width:100, sortable:false},
-					{header:'产品重量', name:'goodsWeight', index:'goodsWeight', width:50, sortable:false},
-					{header:'数量', name:'num', index:'num', width:30, sortable:false},
-					{header:'单价', name:'price', index:'price', width:30, sortable:false},
-					{header:'方向', name:'direction', index:'direction', width:100, sortable:false},
-					{header:'地点', name:'location', index:'location', width:100, sortable:false},
+					{header:'产品名称', name:'goodsName', index:'goodsName', width:200},
+					{header:'产品品牌', name:'brandName', index:'brandName', width:100},
+					{header:'数量', name:'num', index:'num', width:50, sortable:false},
+					{header:'单价', name:'price', index:'price', width:50, sortable:false},
+					{header:'合计', name:'direction', index:'direction', width:50, sortable:false,formatter: function(val, obj, row, act){
+						return row.price * row.num;
+					}},
 					{header:'状态', name:'goodsType', index:'goodsType', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){
 						return getDictLabel(${fns:getDictListJson('goods_type')}, val, '未知', true);
 					}},
-					{header:'操作', name:'actions', width:80, fixed:true, sortable:false, fixed:true, formatter: function(val, obj, row, act){
+					{header:'操作', name:'actions', width:200, fixed:true, sortable:false, fixed:true, formatter: function(val, obj, row, act){
 						var actions = [];
 						
 						if(row.goodsType=='2') {
 							actions.push('<a href="javascript:void(0);" class="btnList" title="删除出库明细" onclick="deleteItem(\''+row.id+'\')">删除</a>&nbsp;');
 						}
 						
+						actions.push('<a href="javascript:void(0);" class="btnList" title="详细" onclick="itemInfo(\''+row.id+'\')">详细</a>&nbsp;');
+
 						return actions.join('');
 					}}
 				],
@@ -62,7 +68,7 @@
 			
 		});
 		
-		function addItem(id) {			
+		function selectItem(id) {			
 			if('${inventory.id}'=='') {
 				alertx("不能新增明细");
 				return;
@@ -71,7 +77,7 @@
 			var title = "选择明细";
 			var url = "iframe:${ctx}/inventory/good/selectIn";
 			
-			top.$.jBox.open(url,title,$(top.document).width()-100,$(top.document).height()-160,{
+			top.$.jBox.open(url,title,$(top.document).width()-260,$(top.document).height()-260,{
 				buttons:{"选择":"ok", "取消":true}, bottomText:"",submit:function(v, h, f){
 					if (v=="ok"){
 						var $iframe = $(h.find("iframe")[0]);						
@@ -104,7 +110,8 @@
 							data: JSON.stringify(outItemList),
 							success: function(data){
 								if(data.status=="1"){	
-									$('#dataGrid').trigger("reloadGrid");	
+									location.reload();
+									//$('#dataGrid').trigger("reloadGrid");	
 									return true;
 								}
 							},
@@ -123,6 +130,19 @@
 			});
 		}
 		
+		function itemInfo(id) {	
+			var title = "明细详情";
+			var url = "iframe:${ctx}/inventory/inventoryItem/form?id="+id+"&inventoryId=${inventory.id}";
+			
+			top.$.jBox.open(url,title,600,600,{
+				buttons:{"取消":true}, bottomText:"",submit:function(v, h, f){
+					
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+		}
+		
 		function deleteItem(id) {
 			confirmx('确认要删除该出库明细吗？',function() {
 
@@ -133,13 +153,19 @@
 					data: {"id":id},
 					success: function(data){
 						if(data.status=="1"){	
-							$('#dataGrid').trigger("reloadGrid");	
+							location.reload();
+							//$('#dataGrid').trigger("reloadGrid");	
 						}
 					}
 				});
 				
 			});
 		} 
+		
+		function print() {
+			alertx("还在完善！");
+			//$("#dataGrid").jqprint();
+		}
 	</script>
 </head>
 <body>
@@ -154,9 +180,9 @@
 			<table class="table-form">
 				<tr>
 					<td class="tit">出库单</td>
-					<td><form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-xlarge required"/><span class="help-inline"><font color="red">*</font></span></td>
+					<td><form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-xlarge"/></td>
 					<td class="tit">客户</td>
-					<td><form:select path="supplierId" class="input-medium required">
+					<td><form:select path="supplierId" class="input-large required">
 					<form:option value="" label=""/>
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select><span class="help-inline"><font color="red">*</font></span></td>
@@ -169,7 +195,7 @@
 					<span class="help-inline"><font color="red">*</font></span>
 					</td>
 					<td class="tit">总价</td>
-					<td><form:input path="totalPrice" htmlEscape="false" class="input-xlarge required number"/><span class="help-inline"><font color="red">*</font></span></td>
+					<td><form:input path="totalPrice" htmlEscape="false" class="input-xlarge"/></td>
 				</tr>
 				<tr>
 					<td class="tit">订单号</td>
@@ -190,7 +216,9 @@
 		</fieldset>
 		
 		<div style="padding:10px 10px">
-			<input id="btnAddItem" class="btn btn-primary" type="button" value="新增" onclick="addItem()"/>&nbsp;
+			<input class="btn btn-primary" type="button" value="新增" onclick="selectItem()"/>&nbsp;
+			<input class="btn btn-primary" type="button" value="打印预览" onclick="print()"/>&nbsp;
+			
 		</div>
 		
 		<table id="dataGrid"></table>

@@ -16,6 +16,7 @@ import com.thinkgem.jeesite.modules.inventory.dao.InventoryDao;
 
 /**
  * 出入库Service
+ * 
  * @author daiyuxiang
  * @version 2017-08-23
  */
@@ -26,22 +27,31 @@ public class InventoryService extends CrudService<InventoryDao, Inventory> {
 	public Inventory get(String id) {
 		return super.get(id);
 	}
-	
+
 	public List<Inventory> findList(Inventory inventory) {
 		return super.findList(inventory);
 	}
-	
+
 	public Page<Inventory> findPage(Page<Inventory> page, Inventory inventory) {
 		return super.findPage(page, inventory);
 	}
-	
+
 	@Transactional(readOnly = false)
 	public void save(Inventory inventory) {
 		super.save(inventory);
 	}
-	
+
 	@Transactional(readOnly = false)
 	public void delete(Inventory inventory) {
 		super.delete(inventory);
+	}
+
+	public int count(Inventory inventory) {
+		return dao.count(inventory);
+	}
+	
+	@Transactional(readOnly = false)
+	public void updateTotalPrice(String id) {
+		dao.updateTotalPrice(id);
 	}
 }

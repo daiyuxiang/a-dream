@@ -103,6 +103,18 @@ public class GoodController extends BaseController {
 		return "modules/inventory/goodOutList";
 	}
 
+	@RequestMapping(value = "totalList")
+	public String totalList(Good good, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		good.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
+
+		Page<Good> page = goodService.findTotalPage(new Page<Good>(request, response), good);
+
+		model.addAttribute("page", page);
+
+		return "modules/inventory/goodTotalList";
+	}
+
 	@RequestMapping(value = "selectIn")
 	public String selectIn(Good good, HttpServletRequest request, HttpServletResponse response, Model model) {
 

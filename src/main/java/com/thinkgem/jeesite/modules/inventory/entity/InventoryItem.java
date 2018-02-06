@@ -28,9 +28,10 @@ public class InventoryItem extends DataEntity<InventoryItem> implements Cloneabl
 	private String direction; // 方向
 	private String location; // 地点
 	private String goodsType; // 货物状态:1在库 2出库
-
 	private String oldId; // 原物资Id
-
+	private String imageUrl; // 图片地址
+	private String barcode; // 条形码
+	
 	private String brandName; // 品牌名称
 
 	public InventoryItem() {
@@ -172,6 +173,22 @@ public class InventoryItem extends DataEntity<InventoryItem> implements Cloneabl
 
 	public void setBrandName(String brandName) {
 		this.brandName = brandName;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 
 }

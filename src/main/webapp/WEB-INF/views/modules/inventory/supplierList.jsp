@@ -33,7 +33,7 @@
 			</li>
 			<li><label>类型：</label>
 				<form:select path="typeString" class="input-medium">
-					<form:option value="" label=""/>
+					<form:option value="" label="全选"/>
 					<form:options items="${fns:getDictList('supplier_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>

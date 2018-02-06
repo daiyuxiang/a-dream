@@ -25,4 +25,9 @@ public class GoodService extends CrudService<GoodDao, Good> {
 		return super.findPage(page, good);
 	}
 
+	public Page<Good> findTotalPage(Page<Good> page, Good good) {
+		good.setPage(page);
+		page.setList(dao.findTotalList(good));
+		return page;
+	}
 }

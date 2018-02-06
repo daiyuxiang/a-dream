@@ -5,7 +5,18 @@
 	<select id="findListByIds" parameterType="java.util.List"
 		resultType="InventoryItem">
 		SELECT
-		<include refid="inventoryItemColumns" />
+			a.id AS "id",
+			a.inventory_id AS "inventoryId",
+			a.goods_name AS "goodsName",
+			a.goods_brand AS "goodsBrand",
+			a.goods_area AS "goodsArea",
+			a.factory_no AS "factoryNo",
+			a.goods_size AS "goodsSize",
+			a.goods_weight AS "goodsWeight",
+			a.num AS "num",
+			a.price AS "price",
+			a.direction AS "direction",
+			a.location AS "location"
 		FROM ts_inventory_item a
 		<where>
 			a.del_flag = '0'

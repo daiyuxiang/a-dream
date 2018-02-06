@@ -36,7 +36,8 @@
 		<div class="control-group">
 			<label class="control-label">编码：</label>
 			<div class="controls">
-				<form:input path="supplierCode" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<form:input path="supplierCode" htmlEscape="false" minlength="2" maxlength="8" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*编码统一为大写字母</font></span>
 			</div>
 		</div>
 		<div class="control-group">

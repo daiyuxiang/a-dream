@@ -39,10 +39,16 @@
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="supplierCode != null and supplierCode != ''">
-				AND a.supplier_code = #{supplierCode}
+				AND a.supplier_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{supplierCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{supplierCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{supplierCode},'%')</if>
 			</if>
 			<if test="supplierName != null and supplierName != ''">
-				AND a.supplier_name = #{supplierName}
+				AND a.supplier_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{supplierName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{supplierName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{supplierName},'%')</if>
 			</if>
 			<if test="typeString != null and typeString != ''">
 				AND a.type = #{typeString}

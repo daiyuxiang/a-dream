@@ -59,7 +59,7 @@
 		<div class="control-group">
 			<label class="control-label">订单下达单位：</label>
 			<div class="controls">
-				<form:select path="supplierId" class="input-medium">
+				<form:select path="supplierId" class="input-large">
 					<form:option value="" label=""/>
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select>
@@ -68,7 +68,7 @@
 		<div class="control-group">
 			<label class="control-label">预计到货时间：</label>
 			<div class="controls">
-				<input name="arrivalDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+				<input name="arrivalDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
 					value="<fmt:formatDate value="${order.arrivalDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</div>
@@ -96,7 +96,7 @@
 		<div class="control-group">
 			<label class="control-label">订单交付单位：</label>
 			<div class="controls">
-				<form:select path="customerId" class="input-medium">
+				<form:select path="customerId" class="input-large">
 					<form:option value="" label=""/>
 					<form:options items="${customerList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select>
@@ -105,7 +105,7 @@
 		<div class="control-group">
 			<label class="control-label">订单交付单位的货期：</label>
 			<div class="controls">
-				<input name="productDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="productDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate "
 					value="<fmt:formatDate value="${order.productDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</div>
@@ -113,7 +113,7 @@
 		<div class="control-group">
 			<label class="control-label">提醒时间：</label>
 			<div class="controls">
-				<input name="reminderDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
+				<input name="reminderDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate required"
 					value="<fmt:formatDate value="${order.reminderDate}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 				<span class="help-inline"><font color="red">*</font></span>	

@@ -17,9 +17,9 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
+	<!-- <ul class="nav nav-tabs">
 		<li class="active"><a href="javascript:void(0);">库存列表</a></li>
-	</ul>
+	</ul> -->
 	<form:form id="searchForm" modelAttribute="good" action="${ctx}/inventory/good/selectIn" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
@@ -28,17 +28,17 @@
 				<form:input path="inventoryNo" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
 			<li><label>供应商：</label>
-				<form:select path="supplierId" class="input-medium">
-					<form:option value="" label=""/>
+				<form:select path="supplierId" class="input-large">
+					<form:option value="" label="全选"/>
 					<form:options items="${supplierList}" itemLabel="supplierName" itemValue="id" htmlEscape="false"/>
 				</form:select>
 			</li>
 			<li><label>入库日期：</label>		
-				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+				<input id="inventoryDateBegin"  name="inventoryDateBegin"  type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
 				value="<fmt:formatDate value="${good.inventoryDateBegin}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 				　--　
-				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+				<input id="inventoryDateEnd" name="inventoryDateEnd" type="text" readonly="readonly" maxlength="20" class="input-small Wdate"
 					value="<fmt:formatDate value="${good.inventoryDateEnd}" pattern="yyyy-MM-dd"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			</li>
@@ -66,16 +66,10 @@
 				<th>供应商</th>
 				<th>产品名称</th>
 				<th>产品品牌</th>
-				<th>产品产地</th>
-				<th>出厂编号</th>
-				<th>产品尺寸</th>
-				<th>产品重量</th>
 				<th>入库数量</th>
 				<th>入库单价</th>
 				<th>出库数量</th>
 				<th>出库单价</th>
-				<th>方向</th>
-				<th>地点</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -100,18 +94,6 @@
 					${good.brandName}
 				</td>
 				<td>
-					${good.goodsArea}
-				</td>
-				<td>
-					${good.factoryNo}
-				</td>
-				<td>
-					${good.goodsSize}
-				</td>
-				<td>
-					${good.goodsWeight}
-				</td>
-				<td>
 					${good.num}
 				</td>
 				<td>
@@ -123,12 +105,7 @@
 				<td>
 					<input type="text" id="price-${good.inventoryItemId}" value="${good.price}" class="input-mini"/>
 				</td>
-				<td>
-					${good.direction}
-				</td>
-				<td>
-					${good.location}
-				</td>
+				
 			</tr>
 		</c:forEach>
 		</tbody>

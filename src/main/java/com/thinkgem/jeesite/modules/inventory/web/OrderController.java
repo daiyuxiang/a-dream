@@ -89,6 +89,22 @@ public class OrderController extends BaseController {
 
 		return "modules/inventory/orderList";
 	}
+	
+	@RequestMapping(value = "selectOrderNo")
+	public String selectOrderNo(Order order, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		Supplier customerParam = new Supplier();
+		customerParam.setTypeArray(
+				new String[] { InventoryEnum.SUPPLIER_TYPE_2.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
+		List<Supplier> customerList = supplierService.findMinList(customerParam);
+
+		Page<Order> page = orderService.findPage(new Page<Order>(request, response), order);
+
+		model.addAttribute("page", page);
+		model.addAttribute("customerList", customerList);
+
+		return "modules/inventory/selectOrderNo";
+	}
 
 	@RequestMapping(value = "form")
 	public String form(Order order, Model model) {

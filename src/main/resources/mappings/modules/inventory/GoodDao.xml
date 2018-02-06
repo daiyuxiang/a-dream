@@ -91,6 +91,33 @@
 		</choose>
 	</select>
 
+	<select id="findTotalList" resultType="Good">
+		SELECT
+			b.goods_name AS goodsName,
+			sum(b.num) AS num
+		FROM  ts_inventory_item b
+		<where>
+			b.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="goodsType != null and goodsType != ''">
+				AND b.goods_type = #{goodsType}
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				AND b.goods_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodsName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodsName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodsName},'%')</if>
+			</if>
+		</where>
+			GROUP BY b.goods_name
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY b.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
 
 
 </mapper>

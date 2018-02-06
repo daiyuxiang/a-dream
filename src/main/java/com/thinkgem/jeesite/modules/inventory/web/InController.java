@@ -25,6 +25,7 @@ import com.thinkgem.jeesite.modules.inventory.entity.Supplier;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
+import com.thinkgem.jeesite.modules.inventory.utils.NoGen;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
@@ -91,6 +92,12 @@ public class InController extends BaseController {
 		if (!beanValidator(model, inventory)) {
 			return form(inventory, model);
 		}
+
+		if (inventory.getIsNewRecord()) {
+			int no = inventoryService.count(inventory);
+			inventory.setInventoryNo(NoGen.getNo("RK", no + 1));
+		}
+
 		inventoryService.save(inventory);
 		addMessage(redirectAttributes, "保存入库单成功");
 		return "redirect:" + Global.getAdminPath() + "/inventory/in/form?id=" + inventory.getId();

@@ -25,6 +25,7 @@ import com.thinkgem.jeesite.modules.inventory.entity.Supplier;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
+import com.thinkgem.jeesite.modules.inventory.utils.NoGen;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
@@ -90,9 +91,15 @@ public class OutController extends BaseController {
 		if (!beanValidator(model, inventory)) {
 			return form(inventory, model);
 		}
+
+		if (inventory.getIsNewRecord()) {
+			int no = inventoryService.count(inventory);
+			inventory.setInventoryNo(NoGen.getNo("CK", no + 1));
+		}
+
 		inventoryService.save(inventory);
 		addMessage(redirectAttributes, "保存出库单成功");
-		return "redirect:" + Global.getAdminPath() + "/inventory/out/form?id="+inventory.getId();
+		return "redirect:" + Global.getAdminPath() + "/inventory/out/form?id=" + inventory.getId();
 	}
 
 	@RequestMapping(value = "delete")

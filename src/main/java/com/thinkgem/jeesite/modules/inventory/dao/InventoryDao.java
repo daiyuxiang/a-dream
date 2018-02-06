@@ -15,5 +15,7 @@ import com.thinkgem.jeesite.modules.inventory.entity.Inventory;
  */
 @MyBatisDao
 public interface InventoryDao extends CrudDao<Inventory> {
-
+	public int count(Inventory inventory);
+	
+	public void updateTotalPrice(String id);
 }
