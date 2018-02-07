@@ -16,7 +16,17 @@
 			a.num AS "num",
 			a.price AS "price",
 			a.direction AS "direction",
-			a.location AS "location"
+			a.location AS "location",
+			a.goods_type AS "goodsType",
+			a.old_id AS "oldId",
+			a.image_url AS "imageUrl",
+			a.barcode AS "barcode",
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.remarks AS "remarks",
+			a.del_flag AS "delFlag"
 		FROM ts_inventory_item a
 		<where>
 			a.del_flag = '0'

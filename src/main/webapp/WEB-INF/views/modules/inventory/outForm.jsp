@@ -41,7 +41,7 @@
 					{header:'产品品牌', name:'brandName', index:'brandName', width:100},
 					{header:'数量', name:'num', index:'num', width:50, sortable:false},
 					{header:'单价', name:'price', index:'price', width:50, sortable:false},
-					{header:'合计', name:'direction', index:'direction', width:50, sortable:false,formatter: function(val, obj, row, act){
+					{header:'合计', name:'', index:'', width:50, sortable:false,formatter: function(val, obj, row, act){
 						return row.price * row.num;
 					}},
 					{header:'状态', name:'goodsType', index:'goodsType', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,9 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.inventory.entity.Inventory;
+import com.thinkgem.jeesite.modules.inventory.entity.InventoryItem;
 import com.thinkgem.jeesite.modules.inventory.entity.Supplier;
+import com.thinkgem.jeesite.modules.inventory.service.InventoryItemService;
 import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
@@ -39,6 +42,10 @@ public class OutController extends BaseController {
 
 	@Autowired
 	private InventoryService inventoryService;
+	
+	@Autowired
+	private InventoryItemService inventoryItemService;
+	
 	@Autowired
 	private SupplierService supplierService;
 
@@ -104,8 +111,18 @@ public class OutController extends BaseController {
 
 	@RequestMapping(value = "delete")
 	public String delete(Inventory inventory, RedirectAttributes redirectAttributes) {
-		inventoryService.delete(inventory);
-		addMessage(redirectAttributes, "删除出库单成功");
+		
+		InventoryItem itemParam = new InventoryItem();
+		itemParam.setInventoryId(inventory.getId());
+		List<InventoryItem> itemList = inventoryItemService.findList(itemParam);
+
+		if (CollectionUtils.isEmpty(itemList)) {
+			inventoryService.delete(inventory);
+			addMessage(redirectAttributes, "删除出库单成功");
+		} else {
+			addMessage(redirectAttributes, "出库单已经存在明细,不能删除");
+		}
+			
 		return "redirect:" + Global.getAdminPath() + "/inventory/out/?repage";
 	}
 

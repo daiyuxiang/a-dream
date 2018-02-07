@@ -6,7 +6,6 @@
 		SELECT COUNT(*)
 		FROM ts_inventory a
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="type != null and type != ''">
 				AND a.type = #{type}
 			</if>
