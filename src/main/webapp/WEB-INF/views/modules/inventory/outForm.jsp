@@ -162,9 +162,8 @@
 			});
 		} 
 		
-		function print() {
-			alertx("还在完善！");
-			//$("#dataGrid").jqprint();
+		function showPrint() {
+			window.location.href = "${ctx}/inventory/out/showPrint?id=${inventory.id}";
 		}
 	</script>
 </head>
@@ -217,7 +216,7 @@
 		
 		<div style="padding:10px 10px">
 			<input class="btn btn-primary" type="button" value="新增" onclick="selectItem()"/>&nbsp;
-			<input class="btn btn-primary" type="button" value="打印预览" onclick="print()"/>&nbsp;
+			<input class="btn btn-primary" type="button" value="打印预览" onclick="showPrint()"/>&nbsp;
 			
 		</div>
 		

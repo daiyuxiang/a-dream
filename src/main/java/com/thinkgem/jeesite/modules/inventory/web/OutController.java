@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.inventory.entity.Inventory;
@@ -29,6 +30,8 @@ import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 import com.thinkgem.jeesite.modules.inventory.utils.NoGen;
+import com.thinkgem.jeesite.modules.sys.entity.Office;
+import com.thinkgem.jeesite.modules.sys.service.OfficeService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
@@ -48,6 +51,9 @@ public class OutController extends BaseController {
 	
 	@Autowired
 	private SupplierService supplierService;
+	
+	@Autowired
+	private OfficeService officeService;
 
 	@ModelAttribute
 	public Inventory get(@RequestParam(required = false) String id) {
@@ -126,4 +132,25 @@ public class OutController extends BaseController {
 		return "redirect:" + Global.getAdminPath() + "/inventory/out/?repage";
 	}
 
+	@RequestMapping(value = "showPrint")
+	public String showPrint(Inventory inventory, Model model) {
+		;
+		
+		Supplier supplier = supplierService.get(inventory.getSupplierId());		
+		
+		InventoryItem param = new InventoryItem();
+		param.setInventoryId(inventory.getId());
+		List<InventoryItem> inventoryItemList = inventoryItemService.findList(param);
+		
+		Office company = UserUtils.getUser().getCompany();
+		company = officeService.get(company.getId());
+		
+		model.addAttribute("company",company);
+		model.addAttribute("supplier",supplier);
+		model.addAttribute("inventory", inventory);
+		model.addAttribute("inventoryItemList", inventoryItemList);
+		model.addAttribute("printDate",DateUtils.getDate());
+
+		return "modules/inventory/showPrint";
+	}
 }
