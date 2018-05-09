@@ -168,15 +168,15 @@ a {
 </head>
 <body>
 	<div class="wrapper" id="printDiv">
-		<div class="name">${company.name}</div>
+		<div class="name">${inventoryVO.companyName}</div>
 		<div class="title">出库单</div>
-		<div class="date">出货日期 <fmt:formatDate value="${inventory.inventoryDate}" pattern="yyyy-MM-dd"/></div>
+		<div class="date">出货日期 <fmt:formatDate value="${inventoryVO.inventoryDate}" pattern="yyyy-MM-dd"/></div>
 		<div class="clearfix">
 			<ul class="info1">
-				<li>订单号: ${inventory.orderNo}</li>
+				<li>订单号: ${inventoryVO.orderNo}</li>
 				<li>收货人: </li>
 			</ul>
-			<div class="number">出库单号:${inventory.inventoryNo}</div>
+			<div class="number">出库单号:${inventoryVO.inventoryNo}</div>
 		</div>
 		<table class="table-box">
 			<tr>
@@ -191,37 +191,39 @@ a {
 				<td>税额</td>
 			</tr>
 			
-			<c:forEach items="${inventoryItemList}" var="inventoryItem" varStatus="status">
+			<c:forEach items="${inventoryItemVOList}" var="vo" varStatus="status">
 				<tr>
 					<td>${status.index + 1}</td>
 					<td></td>
-					<td>${inventoryItem.goodsName}</td>
-					<td>${inventoryItem.num}</td>
-					<td>${inventoryItem.price}</td>
-					<td>${inventoryItem.num*inventoryItem.price}</td>
-					<td>16%</td>
-					<td>${inventoryItem.num*inventoryItem.price/1.16}</td>
-					<td>税额</td>
+					<td>${vo.goodsName}</td>
+					<td>${vo.num}</td>
+					<td>${vo.price}</td>
+					<td>${vo.totalPrice}</td>
+					<td>${vo.taxRate}</td>
+					<td>${vo.totalTax}</td>
+					<td>${vo.taxPrice}</td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td></td>
 				<td></td>
 				<td>合计</td>
-				<td colspan="3"></td>
 				<td></td>
 				<td></td>
+				<td>${inventoryVO.sumTotalPrice}</td>
 				<td></td>
+				<td>${inventoryVO.sumTotalTax}</td>
+				<td>${inventoryVO.sumTaxPrice}</td>
 			</tr>
 		</table>
 		<ul class="info2 clearfix">
-			<li>出货人:</li>
-			<li>地址:${company.address}</li>
-			<li>电话:${company.phone}</li>
+			<li>出货人:${inventoryVO.companyName}</li>
+			<li>地址:${inventoryVO.address}</li>
+			<li>电话:${inventoryVO.phone}</li>
 		</ul>
 		<div class="info3 clearfix">
-			<span>第一联:财务</span> <span>第二联:客户</span> <span>第三联:客户</span> <span>收获送货签收人:</span>
-			<span>打印日期:${printDate}</span>
+			<span>第一联:财务</span> <span>第二联:客户</span> <span>第三联:回单</span> <span>收获送货签收人:</span>
+			<span>打印日期:${inventoryVO.printDate}</span>
 		</div>
 	</div>
 	

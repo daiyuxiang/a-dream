@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.inventory.web;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,8 @@ import com.thinkgem.jeesite.modules.inventory.service.InventoryService;
 import com.thinkgem.jeesite.modules.inventory.service.SupplierService;
 import com.thinkgem.jeesite.modules.inventory.utils.InventoryEnum;
 import com.thinkgem.jeesite.modules.inventory.utils.NoGen;
+import com.thinkgem.jeesite.modules.inventory.vo.InventoryItemVO;
+import com.thinkgem.jeesite.modules.inventory.vo.InventoryVO;
 import com.thinkgem.jeesite.modules.sys.entity.Office;
 import com.thinkgem.jeesite.modules.sys.service.OfficeService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -45,13 +49,13 @@ public class OutController extends BaseController {
 
 	@Autowired
 	private InventoryService inventoryService;
-	
+
 	@Autowired
 	private InventoryItemService inventoryItemService;
-	
+
 	@Autowired
 	private SupplierService supplierService;
-	
+
 	@Autowired
 	private OfficeService officeService;
 
@@ -72,13 +76,17 @@ public class OutController extends BaseController {
 	}
 
 	@RequestMapping(value = { "list", "" })
-	public String list(Inventory inventory, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<Inventory> page = inventoryService.findPage(new Page<Inventory>(request, response), inventory);
+	public String list(Inventory inventory, HttpServletRequest request,
+			HttpServletResponse response, Model model) {
+		Page<Inventory> page = inventoryService.findPage(new Page<Inventory>(
+				request, response), inventory);
 
 		Supplier supplierParam = new Supplier();
-		supplierParam.setTypeArray(
-				new String[] { InventoryEnum.SUPPLIER_TYPE_2.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
-		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
+		supplierParam.setTypeArray(new String[] {
+				InventoryEnum.SUPPLIER_TYPE_2.getValue(),
+				InventoryEnum.SUPPLIER_TYPE_3.getValue() });
+		List<Supplier> supplierList = supplierService
+				.findMinList(supplierParam);
 
 		model.addAttribute("page", page);
 		model.addAttribute("supplierList", supplierList);
@@ -89,9 +97,11 @@ public class OutController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(Inventory inventory, Model model) {
 		Supplier supplierParam = new Supplier();
-		supplierParam.setTypeArray(
-				new String[] { InventoryEnum.SUPPLIER_TYPE_2.getValue(), InventoryEnum.SUPPLIER_TYPE_3.getValue() });
-		List<Supplier> supplierList = supplierService.findMinList(supplierParam);
+		supplierParam.setTypeArray(new String[] {
+				InventoryEnum.SUPPLIER_TYPE_2.getValue(),
+				InventoryEnum.SUPPLIER_TYPE_3.getValue() });
+		List<Supplier> supplierList = supplierService
+				.findMinList(supplierParam);
 
 		model.addAttribute("inventory", inventory);
 		model.addAttribute("supplierList", supplierList);
@@ -100,7 +110,8 @@ public class OutController extends BaseController {
 	}
 
 	@RequestMapping(value = "save")
-	public String save(Inventory inventory, Model model, RedirectAttributes redirectAttributes) {
+	public String save(Inventory inventory, Model model,
+			RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, inventory)) {
 			return form(inventory, model);
 		}
@@ -112,12 +123,14 @@ public class OutController extends BaseController {
 
 		inventoryService.save(inventory);
 		addMessage(redirectAttributes, "保存出库单成功");
-		return "redirect:" + Global.getAdminPath() + "/inventory/out/form?id=" + inventory.getId();
+		return "redirect:" + Global.getAdminPath() + "/inventory/out/form?id="
+				+ inventory.getId();
 	}
 
 	@RequestMapping(value = "delete")
-	public String delete(Inventory inventory, RedirectAttributes redirectAttributes) {
-		
+	public String delete(Inventory inventory,
+			RedirectAttributes redirectAttributes) {
+
 		InventoryItem itemParam = new InventoryItem();
 		itemParam.setInventoryId(inventory.getId());
 		List<InventoryItem> itemList = inventoryItemService.findList(itemParam);
@@ -128,28 +141,76 @@ public class OutController extends BaseController {
 		} else {
 			addMessage(redirectAttributes, "出库单已经存在明细,不能删除");
 		}
-			
+
 		return "redirect:" + Global.getAdminPath() + "/inventory/out/?repage";
 	}
 
 	@RequestMapping(value = "showPrint")
 	public String showPrint(Inventory inventory, Model model) {
-		;
-		
-		Supplier supplier = supplierService.get(inventory.getSupplierId());		
+		Office company = UserUtils.getUser().getCompany();
+		company = officeService.get(company.getId());
+
+		Supplier supplier = supplierService.get(inventory.getSupplierId());
+
+		InventoryVO inventoryVO = new InventoryVO();
+		inventoryVO.setSupplierName(supplier.getSupplierName());
+		inventoryVO.setCompanyName(company.getName());
+		inventoryVO.setInventoryDate(inventory.getInventoryDate());
+		inventoryVO.setOrderNo(inventory.getOrderNo());
+		inventoryVO.setInventoryNo(inventory.getInventoryNo());
+
+		inventoryVO.setAddress(company.getAddress());
+		inventoryVO.setPhone(company.getPhone());
+		inventoryVO.setPrintDate(DateUtils.getDate());
+
+		BigDecimal sumTotalPriceD = new BigDecimal("0");
+		BigDecimal sumTotalTaxD = new BigDecimal("0");
+		BigDecimal sumTaxPriceD = new BigDecimal("0");
 		
 		InventoryItem param = new InventoryItem();
 		param.setInventoryId(inventory.getId());
-		List<InventoryItem> inventoryItemList = inventoryItemService.findList(param);
+		List<InventoryItem> inventoryItemList = inventoryItemService
+				.findList(param);
+
+		List<InventoryItemVO> inventoryItemVOList = new ArrayList<InventoryItemVO>();
+		String taxRate = "16%";
+
+		for (InventoryItem inventoryItem : inventoryItemList) {
+			InventoryItemVO inventoryItemVO = new InventoryItemVO();
+			inventoryItemVO.setGoodsName(inventoryItem.getGoodsName());
+			inventoryItemVO.setNum(inventoryItem.getNum());
+			inventoryItemVO.setPrice(inventoryItem.getPrice());
+
+			BigDecimal numD = new BigDecimal(inventoryItem.getNum());
+			BigDecimal priceD = new BigDecimal(inventoryItem.getPrice());
+			BigDecimal totalPriceD = numD.multiply(priceD);
+			
+			sumTotalPriceD = sumTotalPriceD.add(totalPriceD);
+			inventoryItemVO.setTotalPrice(totalPriceD.toString());
+
+			inventoryItemVO.setTaxRate(taxRate);
+
+			BigDecimal totalTaxD = totalPriceD
+					.divide(new BigDecimal("1.16"), 2);
+
+			sumTotalTaxD = sumTotalTaxD.add(totalTaxD);
+			inventoryItemVO.setTotalTax(totalTaxD.toString());
+
+			BigDecimal taxPrice = totalPriceD.subtract(totalTaxD);
+
+			sumTaxPriceD = sumTaxPriceD.add(taxPrice);
+			inventoryItemVO.setTaxPrice(taxPrice.toString());
+
+			inventoryItemVOList.add(inventoryItemVO);
+		}
+
+		inventoryVO.setSumTotalPrice(sumTotalPriceD.toString());
+		inventoryVO.setSumTotalTax(sumTotalTaxD.toString());
+		inventoryVO.setSumTaxPrice(sumTaxPriceD.toString());
 		
-		Office company = UserUtils.getUser().getCompany();
-		company = officeService.get(company.getId());
-		
-		model.addAttribute("company",company);
-		model.addAttribute("supplier",supplier);
-		model.addAttribute("inventory", inventory);
-		model.addAttribute("inventoryItemList", inventoryItemList);
-		model.addAttribute("printDate",DateUtils.getDate());
+		model.addAttribute("supplier", supplier);
+		model.addAttribute("inventoryVO", inventoryVO);
+		model.addAttribute("inventoryItemVOList", inventoryItemVOList);
 
 		return "modules/inventory/showPrint";
 	}
