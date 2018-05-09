@@ -214,4 +214,46 @@ public class OutController extends BaseController {
 
 		return "modules/inventory/showPrint";
 	}
+	
+	@RequestMapping(value = "showPrint2")
+	public String showPrint2(Inventory inventory, Model model) {
+		Office company = UserUtils.getUser().getCompany();
+		company = officeService.get(company.getId());
+
+		Supplier supplier = supplierService.get(inventory.getSupplierId());
+
+		InventoryVO inventoryVO = new InventoryVO();
+		inventoryVO.setSupplierName(supplier.getSupplierName());
+		inventoryVO.setCompanyName(company.getName());
+		inventoryVO.setInventoryDate(inventory.getInventoryDate());
+		inventoryVO.setOrderNo(inventory.getOrderNo());
+		inventoryVO.setInventoryNo(inventory.getInventoryNo());
+
+		inventoryVO.setAddress(company.getAddress());
+		inventoryVO.setPhone(company.getPhone());
+		inventoryVO.setPrintDate(DateUtils.getDate());
+		
+		InventoryItem param = new InventoryItem();
+		param.setInventoryId(inventory.getId());
+		List<InventoryItem> inventoryItemList = inventoryItemService
+				.findList(param);
+
+		List<InventoryItemVO> inventoryItemVOList = new ArrayList<InventoryItemVO>();
+		String taxRate = "16%";
+
+		for (InventoryItem inventoryItem : inventoryItemList) {
+			InventoryItemVO inventoryItemVO = new InventoryItemVO();
+			inventoryItemVO.setGoodsName(inventoryItem.getGoodsName());
+			inventoryItemVO.setNum(inventoryItem.getNum());
+			inventoryItemVO.setTaxRate(taxRate);
+
+			inventoryItemVOList.add(inventoryItemVO);
+		}
+		
+		model.addAttribute("supplier", supplier);
+		model.addAttribute("inventoryVO", inventoryVO);
+		model.addAttribute("inventoryItemVOList", inventoryItemVOList);
+
+		return "modules/inventory/showPrint";
+	}
 }

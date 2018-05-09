@@ -165,6 +165,11 @@
 		function showPrint() {
 			window.location.href = "${ctx}/inventory/out/showPrint?id=${inventory.id}";
 		}
+		
+		function showPrint2() {
+			window.location.href = "${ctx}/inventory/out/showPrint2?id=${inventory.id}";
+		}
+		
 	</script>
 </head>
 <body>
@@ -216,7 +221,8 @@
 		
 		<div style="padding:10px 10px">
 			<input class="btn btn-primary" type="button" value="新增" onclick="selectItem()"/>&nbsp;
-			<input class="btn btn-primary" type="button" value="打印预览" onclick="showPrint()"/>&nbsp;
+			<input class="btn btn-primary" type="button" value="打印预览(有价格)" onclick="showPrint()"/>&nbsp;
+			<input class="btn btn-primary" type="button" value="打印预览(无价格)" onclick="showPrint2()"/>&nbsp;
 			
 		</div>
 		

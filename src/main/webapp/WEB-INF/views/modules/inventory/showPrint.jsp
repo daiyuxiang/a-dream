@@ -181,7 +181,6 @@ a {
 		<table class="table-box">
 			<tr>
 				<td>序号</td>
-				<td>货码</td>
 				<td>货物名称/型号规格</td>
 				<td>数量</td>
 				<td>含税单价</td>
@@ -194,7 +193,6 @@ a {
 			<c:forEach items="${inventoryItemVOList}" var="vo" varStatus="status">
 				<tr>
 					<td>${status.index + 1}</td>
-					<td></td>
 					<td>${vo.goodsName}</td>
 					<td>${vo.num}</td>
 					<td>${vo.price}</td>
@@ -205,7 +203,6 @@ a {
 				</tr>
 			</c:forEach>
 			<tr>
-				<td></td>
 				<td></td>
 				<td>合计</td>
 				<td></td>
