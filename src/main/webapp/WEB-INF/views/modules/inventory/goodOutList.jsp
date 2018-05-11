@@ -49,7 +49,7 @@
 			</li>
 			<li><label>产品品牌：</label>
 				<form:select path="goodsBrand" class="input-medium">
-					<form:option value="" label=""/>
+					<form:option value="" label="全选"/>
 					<form:options items="${brandList}" itemLabel="brandName" itemValue="id" htmlEscape="false"/>
 				</form:select>
 			</li>
@@ -70,12 +70,12 @@
 				<th>客户</th>
 				<th>产品名称</th>
 				<th>产品品牌</th>
+				<th>出库数量</th>
+				<th>出库单价</th>
 				<th>产品产地</th>
 				<th>出厂编号</th>
 				<th>产品尺寸</th>
 				<th>产品重量</th>
-				<th>出库数量</th>
-				<th>出库单价</th>
 				<th>货位</th>
 				<th>地点</th>
 				<th>状态</th>
@@ -103,6 +103,12 @@
 					${good.brandName}
 				</td>
 				<td>
+					${good.num}
+				</td>
+				<td>
+					${good.price}
+				</td>
+				<td>
 					${good.goodsArea}
 				</td>
 				<td>
@@ -113,12 +119,6 @@
 				</td>
 				<td>
 					${good.goodsWeight}
-				</td>
-				<td>
-					${good.num}
-				</td>
-				<td>
-					${good.price}
 				</td>
 				<td>
 					${good.direction}
