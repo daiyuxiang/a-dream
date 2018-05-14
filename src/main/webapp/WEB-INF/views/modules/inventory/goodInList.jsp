@@ -125,7 +125,12 @@
 					${good.location}
 				</td>
 				<td>
-					入库									
+					<c:if test="${good.goodsType == 1}">
+						入库
+					</c:if>
+					<c:if test="${good.goodsType == 2}">
+						出库
+					</c:if>
 				</td>
 			</tr>
 		</c:forEach>

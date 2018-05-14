@@ -69,7 +69,7 @@ public class GoodController extends BaseController {
 		List<Brand> brandList = brandService.findList(brandParam);
 
 		good.setType(InventoryEnum.INVENTORY_TYPE_1.getValue());
-		good.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
+		//good.setGoodsType(InventoryEnum.INVENTORY_TYPE_1.getValue());
 
 		Page<Good> page = goodService.findPage(new Page<Good>(request, response), good);
 
